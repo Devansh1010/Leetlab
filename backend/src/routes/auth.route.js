@@ -1,12 +1,13 @@
 import express, {Router} from 'express'
 import { login, logout, me, register } from '../controllers/auth.controlller.js'
+import { authMiddleware } from '../middleware/auth.middleware.js'
 
 const authRoute = Router()
 
 authRoute.post('/register', register)
 authRoute.post('/login', login)
-authRoute.post('/logout', logout)
-authRoute.post('/me', me)
+authRoute.post('/logout', authMiddleware, logout)
+authRoute.get('/me', authMiddleware, me)
 
 
 export default authRoute

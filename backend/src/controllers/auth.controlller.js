@@ -7,7 +7,7 @@ import { UserRole } from '../generated/prisma/index.js'
 export const register = async (req, res) => {
     try {
         const { email, password, name } = req.body
-        console.log(db.user)
+
 
         if (!email || !name || !password) {
             res.status(401).json({ status: 401, message: "Fields can't be empty🤷‍♂️" })
@@ -101,12 +101,16 @@ export const login = async (req, res) => {
             id: user.id
         }, process.env.JWT_SERECT)
 
+        console.log('Generated Token:', token)
+
         res.cookie('jwt', token, {
             httpOnly: true,
             sameSite: 'strict',
             secure: process.env.NODE_ENV !== 'development',
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
+
+        console.log(res.cookies)
 
         return res.status(200).json({
             status: 200,
@@ -148,12 +152,11 @@ export const logout = async (req, res) => {
 }
 export const me = async (req, res) => {
     try {
-        const { } = req.body
-
+     console.log('User from me', req.user)
         return res.status(200).json({
             status: 200,
             message: "User Autheticated!😊",
-
+            user: req.user
         })
     } catch (e) {
         console.log('Error occured in Me auth catch!', e)
