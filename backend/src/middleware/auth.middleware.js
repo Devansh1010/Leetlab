@@ -1,5 +1,8 @@
 import jwt from 'jsonwebtoken'
 import {db} from '../libs/db.js'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 export const authMiddleware = async (req, res, next) => {
     try {
@@ -10,8 +13,8 @@ export const authMiddleware = async (req, res, next) => {
         }
 
         let decodedToken;
-        try {
-            decodedToken =  jwt.verify(token, process.env.JWT_SECRET)
+        try {  
+            decodedToken =  jwt.verify(token, process.env.JWT_SERECT)  
         } catch (err) {
             return res.status(401).json({status: 401, message: 'Invalid token' })
         }
