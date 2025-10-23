@@ -17,18 +17,16 @@ export const createProblem = async (req, res) => {
         if (uesrRole !== 'admin') {
             return res.status(403).json({ status: 403, message: "Forbidden: You don't have permission to perform this action." })
         }
-
-        try {
-            for(const {language, solutionCode} of referenceSolutions) {
+            for (const { language, solutionCode } of referenceSolutions) {
                 const languageId = getAllLanguages(language)
 
-                if(!languageId) {
+                if (!languageId) {
                     return res.status(400).json({ status: 400, message: `Unsupported language: ${language}` })
                 }
 
                 //Loop for each testcase for each language solution
 
-                const submissions = testcases.map((input, output)=>({
+                const submissions = testcases.map((input, output) => ({
                     language_id: languageId,
                     source_code: solutionCode,
                     stdin: input,
@@ -39,11 +37,18 @@ export const createProblem = async (req, res) => {
 
                 const tokens = submissionsResult.map((res) => res.token)
 
+                const results = poolBathResults(tokens)
+
+                for (let i = 0; i < results.length; i++) {
+                    const result = results[i]
+                    if (result.status.id !== 3) {
+                        return res.status(400).json({ status: 400, message: `Reference solution failed for language: ${language} on testcase ${i + 1}` })
+                    }
+
+                }
             }
 
-        } catch (error) {
-            
-        }
+       
 
         const newProblem = await db.problem.create({
             data: {
@@ -57,7 +62,8 @@ export const createProblem = async (req, res) => {
                 codeSnippets,
                 referenceSolutions,
                 hints,
-                editorial
+                editorial,
+                userId: req.user.id,
             }
         })
 
