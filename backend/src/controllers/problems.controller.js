@@ -1,0 +1,179 @@
+
+import { db } from '../libs/db.js'
+import { getAllLanguages } from '../libs/judge0.util.js'
+
+export const createProblem = async (req, res) => {
+    try {
+        const { title, description, difficulty, tags, example, contraints, testcases, codeSnippets, referenceSolutions, hints, editorial } = req.body
+
+
+        if (!title || !description || !difficulty) {
+            return res.status(400).json({ status: 400, message: "All fields are required!" })
+        }
+
+        //Check User Role
+        const uesrRole = req.user.role
+
+        if (uesrRole !== 'admin') {
+            return res.status(403).json({ status: 403, message: "Forbidden: You don't have permission to perform this action." })
+        }
+
+        try {
+            for(const {language, solutionCode} of referenceSolutions) {
+                const languageId = getAllLanguages(language)
+
+                if(!languageId) {
+                    return res.status(400).json({ status: 400, message: `Unsupported language: ${language}` })
+                }
+
+                //Loop for each testcase for each language solution
+
+                const submissions = testcases.map((input, output)=>({
+                    language_id: languageId,
+                    source_code: solutionCode,
+                    stdin: input,
+                    expected_output: output,
+                }))
+
+                const submissionsResult = await submitBatch(submissions)
+
+                const tokens = submissionsResult.map((res) => res.token)
+
+            }
+
+        } catch (error) {
+            
+        }
+
+        const newProblem = await db.problem.create({
+            data: {
+                title,
+                description,
+                difficulty,
+                tags,
+                example,
+                contraints,
+                testcases,
+                codeSnippets,
+                referenceSolutions,
+                hints,
+                editorial
+            }
+        })
+
+        return res.status(201).json({
+            status: 201,
+            message: "Problem created successfully!",
+            problem: newProblem
+        })
+
+    } catch (error) {
+        console.error("Error creating problem:", error)
+        return res.status(500).json({ status: 500, message: "Internal server error" })
+    }
+}
+
+export const getAllProblems = async (req, res) => {
+    try {
+        const problems = await db.problem.findMany()
+        return res.status(200).json({
+            status: 200,
+            problems
+        })
+    } catch (error) {
+        console.error("Error fetching problems:", error)
+        return res.status(500).json({ status: 500, message: "Internal server error" })
+    }
+}
+
+export const getProblemById = async (req, res) => {
+    try {
+        const { problemId } = req.params
+
+        if (!problemId) {
+            return res.status(400).json({ status: 400, message: "Problem ID is required!" })
+        }
+
+        const problem = await db.problem.findUnique({
+            where: {
+                id: parseInt(problemId)
+            }
+        })
+        if (!problem) {
+            return res.status(404).json({ status: 404, message: "Problem not found!" })
+        }
+        return res.status(200).json({
+            status: 200,
+            problem
+        })
+
+    } catch (error) {
+
+    }
+}
+
+export const updateProblem = async (req, res) => {
+    try {
+        const { problemId } = req.params
+        const { title, description, difficulty } = req.body
+
+        if (!problemId) {
+            return res.status(400).json({ status: 400, message: "Problem ID is required!" })
+        }
+
+        const updatedProblem = await db.problem.update({
+            where: {
+                id: parseInt(problemId)
+            },
+            data: {
+                title,
+                description,
+                difficulty
+            }
+        })
+
+        return res.status(200).json({
+            status: 200,
+            message: "Problem updated successfully!",
+            problem: updatedProblem
+        })
+
+    } catch (error) {
+        console.error("Error updating problem:", error)
+        return res.status(500).json({ status: 500, message: "Internal server error" })
+    }
+
+}
+
+export const deleteProblem = async (req, res) => {
+    try {
+        const { problemId } = req.params
+
+        if (!problemId) {
+            return res.status(400).json({ status: 400, message: "Problem ID is required!" })
+        }
+
+        const deletedProblem = await db.problem.delete({
+            where: {
+                id: parseInt(problemId)
+            }
+        })
+
+        if (!deletedProblem) {
+            return res.status(404).json({ status: 404, message: "Problem not found!" })
+        }
+
+        return res.status(200).json({
+            status: 200,
+            message: "Problem deleted successfully!"
+        })
+
+    } catch (error) {
+        console.error("Error deleting problem:", error)
+        return res.status(500).json({ status: 500, message: "Internal server error" })
+    }
+}
+
+export const solvedProblemsByUser = async (req, res) => {
+
+}
