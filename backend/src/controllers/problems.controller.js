@@ -7,7 +7,7 @@ export const createProblem = async (req, res) => {
         const { title, description, difficulty, tags, example, contraints, testcases, codeSnippets, referenceSolutions, hints, editorial } = req.body
 
 
-        if (!title || !description || !difficulty) {
+        if (!title || !description || !difficulty || !testcases || !referenceSolutions || !codeSnippets || !editorial) {
             return res.status(400).json({ status: 400, message: "All fields are required!" })
         }
 
@@ -19,39 +19,39 @@ export const createProblem = async (req, res) => {
         }
 
         //Validate Reference Solutions
-            for (const [ language, solutionCode ] of Object.entries(referenceSolutions)) {
-                const languageId = getAllLanguages(language)
+        for (const [language, solutionCode] of Object.entries(referenceSolutions)) {
+            const languageId = getAllLanguages(language)
 
-                
-                if (!languageId) {
-                    return res.status(400).json({ status: 400, message: `Unsupported language: ${language}` })
-                }
 
-                //Loop for each testcase for each language solution
-
-                const submissions = testcases.map((input, output) => ({
-                    language_id: languageId,
-                    source_code: solutionCode,
-                    stdin: input,
-                    expected_output: output,
-                }))
-
-                const submissionsResult = await submitBatch(submissions)
-
-                const tokens = submissionsResult.map((res) => res.token)
-
-                const results = poolBathResults(tokens)
-
-                for (let i = 0; i < results.length; i++) {
-                    const result = results[i]
-                    if (result.status.id !== 3) {
-                        return res.status(400).json({ status: 400, message: `Reference solution failed for language: ${language} on testcase ${i + 1}` })
-                    }
-
-                }
+            if (!languageId) {
+                return res.status(400).json({ status: 400, message: `Unsupported language: ${language}` })
             }
 
-       
+            //Loop for each testcase for each language solution
+
+            const submissions = testcases.map((input, output) => ({
+                language_id: languageId,
+                source_code: solutionCode,
+                stdin: input,
+                expected_output: output,
+            }))
+
+            const submissionsResult = await submitBatch(submissions)
+
+            const tokens = submissionsResult.map((res) => res.token)
+
+            const results = poolBathResults(tokens)
+
+            for (let i = 0; i < results.length; i++) {
+                const result = results[i]
+                if (result.status.id !== 3) {
+                    return res.status(400).json({ status: 400, message: `Reference solution failed for language: ${language} on testcase ${i + 1}` })
+                }
+
+            }
+        }
+
+
 
         const newProblem = await db.problem.create({
             data: {
@@ -105,7 +105,7 @@ export const getProblemById = async (req, res) => {
 
         const problem = await db.problem.findUnique({
             where: {
-                id: parseInt(problemId)
+                id: problemId
             }
         })
         if (!problem) {
@@ -117,17 +117,52 @@ export const getProblemById = async (req, res) => {
         })
 
     } catch (error) {
-
+        console.error("Error fetching problem by ID:", error)
+        return res.status(500).json({ status: 500, message: "Internal server error" })
     }
 }
 
 export const updateProblem = async (req, res) => {
     try {
         const { problemId } = req.params
-        const { title, description, difficulty } = req.body
+
+        const { title, description, difficulty, tags, example, contraints, testcases, codeSnippets, referenceSolutions, hints, editorial } = req.body
+
 
         if (!problemId) {
             return res.status(400).json({ status: 400, message: "Problem ID is required!" })
+        }
+
+        for (const [language, solutionCode] of Object.entries(referenceSolutions)) {
+            const languageId = getAllLanguages(language)
+
+
+            if (!languageId) {
+                return res.status(400).json({ status: 400, message: `Unsupported language: ${language}` })
+            }
+
+            //Loop for each testcase for each language solution
+
+            const submissions = testcases.map((input, output) => ({
+                language_id: languageId,
+                source_code: solutionCode,
+                stdin: input,
+                expected_output: output,
+            }))
+
+            const submissionsResult = await submitBatch(submissions)
+
+            const tokens = submissionsResult.map((res) => res.token)
+
+            const results = poolBathResults(tokens)
+
+            for (let i = 0; i < results.length; i++) {
+                const result = results[i]
+                if (result.status.id !== 3) {
+                    return res.status(400).json({ status: 400, message: `Reference solution failed for language: ${language} on testcase ${i + 1}` })
+                }
+
+            }
         }
 
         const updatedProblem = await db.problem.update({
@@ -137,7 +172,16 @@ export const updateProblem = async (req, res) => {
             data: {
                 title,
                 description,
-                difficulty
+                difficulty,
+                tags,
+                example,
+                contraints,
+                testcases,
+                codeSnippets,
+                referenceSolutions,
+                hints,
+                editorial,
+                userId: req.user.id,
             }
         })
 
