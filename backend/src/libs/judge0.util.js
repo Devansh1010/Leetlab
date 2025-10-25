@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 export const getAllLanguages = (language) => {
     const LanguageMap = {
         "JavaScript": 63,

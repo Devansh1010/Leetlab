@@ -1,6 +1,6 @@
 
 import { db } from '../libs/db.js'
-import { getAllLanguages } from '../libs/judge0.util.js'
+import { getAllLanguages, poolBathResults, submitBatch } from '../libs/judge0.util.js'
 
 export const createProblem = async (req, res) => {
     try {
@@ -17,9 +17,12 @@ export const createProblem = async (req, res) => {
         if (uesrRole !== 'admin') {
             return res.status(403).json({ status: 403, message: "Forbidden: You don't have permission to perform this action." })
         }
-            for (const { language, solutionCode } of referenceSolutions) {
+
+        //Validate Reference Solutions
+            for (const [ language, solutionCode ] of Object.entries(referenceSolutions)) {
                 const languageId = getAllLanguages(language)
 
+                
                 if (!languageId) {
                     return res.status(400).json({ status: 400, message: `Unsupported language: ${language}` })
                 }
