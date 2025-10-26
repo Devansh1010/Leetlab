@@ -7,7 +7,7 @@ dotenv.config();
 import { createProblem, deleteProblem, getAllProblems, getProblemById, solvedProblemsByUser, updateProblem } from '../controllers/problems.controller.js';
 const problemsRoute = express.Router();
 
-problemsRoute.post('/createProblem', authMiddleware,  createProblem)
+problemsRoute.post('/createProblem', authMiddleware, adminMiddleware, createProblem)
 problemsRoute.get('/getAllProblems', authMiddleware, getAllProblems)
 problemsRoute.get('/getProblem/:problemId', authMiddleware, getProblemById)
 problemsRoute.put('/updateProblem/:problemId', authMiddleware, adminMiddleware, updateProblem)
