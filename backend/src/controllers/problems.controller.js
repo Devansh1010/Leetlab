@@ -12,11 +12,11 @@ export const createProblem = async (req, res) => {
         }
 
         //Check User Role
-        // const uesrRole = req.user.role
+        const uesrRole = req.user.role
 
-        // if (uesrRole !== 'admin') {
-        //     return res.status(403).json({ status: 403, message: "Forbidden: You don't have permission to perform this action." })
-        // }
+        if (uesrRole !== 'admin') {
+            return res.status(403).json({ status: 403, message: "Forbidden: You don't have permission to perform this action." })
+        }
 
         //Validate Reference Solutions
         for (const [language, solutionCode] of Object.entries(referenceSolutions)) {
