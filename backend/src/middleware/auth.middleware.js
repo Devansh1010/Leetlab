@@ -7,7 +7,7 @@ dotenv.config()
 export const authMiddleware = async (req, res, next) => {
     try {
         const token = await req.cookies.jwt;
-        console.log('Token in middleware:', token)
+
         if (!token) {
             return res.status(401).json({ status: 401, message: 'Unauthorized' })
         }

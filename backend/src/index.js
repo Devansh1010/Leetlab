@@ -2,8 +2,11 @@ import express from 'express'
 import dotenv from 'dotenv'
 import cookieParser from 'cookie-parser'
 
+// Importing Routes
 import authRoute from './routes/auth.route.js';
 import problemsRoute from './routes/problems.route.js';
+import executeCodeRoute from './routes/executeCode.route.js';
+
 
 dotenv.config()
 
@@ -19,8 +22,8 @@ app.get('/', (req, res)=>{
 
 app.use('/api/v1/auth', authRoute)
 app.use('/api/v1/problems', problemsRoute)
+app.use('/api/v1/execute-code', executeCodeRoute)
 
 app.listen(port, (req, res)=> {
     console.log('Server is running on port: ', port)
-    // return res.json({status: 200, message: "Server is up and running"})
 })
