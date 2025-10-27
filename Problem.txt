@@ -1,0 +1,62 @@
+{
+    "status": 201,
+    "message": "Problem created successfully!",
+    "problem": {
+        "id": "f1c7bb55-5d0f-4093-93d0-953ce7f0e87b",
+        "title": "Sum to target array Problem",
+        "description": "Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to the target.",
+        "tags": [
+            "array",
+            "hashmap",
+            "easy"
+        ],
+        "difficulty": "EASY",
+        "userId": "4dc66119-0498-4e4b-864e-218011e47559",
+        "example": {
+            "input": "nums = [2,7,11,15], target = 9",
+            "output": "[0,1]",
+            "explanation": "Because nums[0] + nums[1] == 9, we return [0, 1]."
+        },
+        "contraints": "2 <= nums.length <= 10^4, -10^9 <= nums[i] <= 10^9, -10^9 <= target <= 10^9, Only one valid answer exists.",
+        "hints": "Try using a HashMap to store visited numbers and their indices.",
+        "editorial": "Use a HashMap to check for complements in a single pass through the array. This reduces the time complexity to O(n).",
+        "testcases": [
+            {
+                "input": "[2,7,11,15], 9",
+                "expectedOutput": "[0,1]"
+            },
+            {
+                "input": "[3,2,4], 6",
+                "expectedOutput": "[1,2]"
+            },
+            {
+                "input": "[3,3], 6",
+                "expectedOutput": "[0,1]"
+            }
+        ],
+        "codeSnippets": [
+            {
+                "language": "JavaScript (Node.js 20.1.0)",
+                "language_id": 63,
+                "source_code": "const fs = require('fs');\n\nfunction twoSum(nums, target) {\n  const map = new Map();\n  for (let i = 0; i < nums.length; i++) {\n    if (map.has(target - nums[i])) return [map.get(target - nums[i]), i];\n    map.set(nums[i], i);\n  }\n}\n\nconst nums = [2,7,11,15];\nconst target = 9;\nconsole.log(twoSum(nums, target));"
+            },
+            {
+                "language": "Python (3.11.2)",
+                "language_id": 71,
+                "source_code": "import sys\n\ndef twoSum(nums, target):\n    lookup = {}\n    for i, num in enumerate(nums):\n        if target - num in lookup:\n            return [lookup[target - num], i]\n        lookup[num] = i\n\nnums = [2,7,11,15]\ntarget = 9\nprint(twoSum(nums, target))"
+            },
+            {
+                "language": "Java (OpenJDK 21.0.1)",
+                "language_id": 62,
+                "source_code": "import java.util.*;\n\npublic class Main {\n    public static int[] twoSum(int[] nums, int target) {\n        Map<Integer, Integer> map = new HashMap<>();\n        for (int i = 0; i < nums.length; i++) {\n            if (map.containsKey(target - nums[i])) {\n                return new int[]{map.get(target - nums[i]), i};\n            }\n            map.put(nums[i], i);\n        }\n        return new int[]{};\n    }\n\n    public static void main(String[] args) {\n        int[] nums = {2, 7, 11, 15};\n        int target = 9;\n        int[] res = twoSum(nums, target);\n        System.out.println(Arrays.toString(res));\n    }\n}"
+            }
+        ],
+        "referenceSolutions": {
+            "Java": "import java.util.*;\n\npublic class Main {\n    public static int[] twoSum(int[] nums, int target) {\n        Map<Integer, Integer> map = new HashMap<>();\n        for (int i = 0; i < nums.length; i++) {\n            if (map.containsKey(target - nums[i])) {\n                return new int[]{map.get(target - nums[i]), i};\n            }\n            map.put(nums[i], i);\n        }\n        return new int[]{};\n    }\n\n    public static void main(String[] args) {\n        int[] nums = {2, 7, 11, 15};\n        int target = 9;\n        int[] res = twoSum(nums, target);\n        System.out.println(Arrays.toString(res));\n    }\n}",
+            "Python": "import sys\n\ndef twoSum(nums, target):\n    lookup = {}\n    for i, num in enumerate(nums):\n        if target - num in lookup:\n            return [lookup[target - num], i]\n        lookup[num] = i\n\nnums = [2,7,11,15]\ntarget = 9\nprint(twoSum(nums, target));",
+            "JavaScript": "const fs = require('fs');\n\nfunction twoSum(nums, target) {\n  const map = new Map();\n  for (let i = 0; i < nums.length; i++) {\n    if (map.has(target - nums[i])) return [map.get(target - nums[i]), i];\n    map.set(nums[i], i);\n  }\n}\n\nconst nums = [2,7,11,15];\nconst target = 9;\nconsole.log(twoSum(nums, target));"
+        },
+        "createdAt": "2025-10-26T12:52:41.419Z",
+        "updatedAt": "2025-10-26T12:52:41.419Z"
+    }
+}

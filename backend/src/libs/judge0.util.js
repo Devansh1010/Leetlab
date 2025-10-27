@@ -41,3 +41,13 @@ export const poolBathResults = async (tokens) => {
         await new Promise((resolve) => setTimeout(resolve, 2000))
     }
 }
+
+export const getLanguageById = (language_id) => {
+    const LanguageMap = {
+        63: "JavaScript",
+        71: "Python",
+        62: "Java",
+    }
+
+    return LanguageMap[language_id];
+}
