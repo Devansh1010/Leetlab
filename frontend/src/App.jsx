@@ -5,7 +5,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 
 const App = () => {
-  let authenticated = true // This should be replaced with real authentication logic
+  let authenticated = false  // This should be replaced with real authentication logic
   return (
     <Routes>
       <Route
