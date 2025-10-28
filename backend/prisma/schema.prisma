@@ -26,9 +26,11 @@ model User {
   image          String?
   role           UserRole        @default(USER)
   password       String
+
   problems       Problem[]
   submissions    Submission[]
   problemsSolved ProblemSolved[]
+  playlists      Playlist[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -62,6 +64,7 @@ model Problem {
   user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
   submissions    Submission[]
   problemsSolved ProblemSolved[]
+  problemInPlaylists ProblemInPlaylist[]
 }
 
 model Submission {
@@ -124,4 +127,35 @@ model ProblemSolved {
   problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
 
   @@unique([userId, problemId])
+}
+
+model Playlist {
+  id String @id @default(uuid())
+  name String
+  description String?
+  userId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  //relation
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  problems ProblemInPlaylist[]
+
+  @@unique([name, userId])
+}
+
+model ProblemInPlaylist {
+  id String @id @default(uuid())
+  playlistId String
+  problemId String
+  // order Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  //relation
+  playlist Playlist @relation(fields: [playlistId], references: [id], onDelete: Cascade)
+  problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+
+  @@unique([playlistId, problemId])
 }

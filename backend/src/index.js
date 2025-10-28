@@ -6,7 +6,7 @@ import cookieParser from 'cookie-parser'
 import authRoute from './routes/auth.route.js';
 import problemsRoute from './routes/problems.route.js';
 import executeCodeRoute from './routes/executeCode.route.js';
-import executeCodeRoute from './routes/submission.route.js';
+import submissionRoute from './routes/submission.route.js';
 
 
 dotenv.config()
