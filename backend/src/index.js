@@ -12,14 +12,15 @@ import submissionRoute from './routes/submission.route.js';
 
 dotenv.config()
 
+
+const app = express();
+const port = process.env.PORT
+
 //cors
 app.use(cors({
     origin: 'http://localhost:5173',
     credentials: true,
 }));
- 
-const app = express();
-const port = process.env.PORT
 
 app.use(express.json())
 app.use(cookieParser())
