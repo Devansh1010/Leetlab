@@ -1,6 +1,7 @@
 import express from 'express'
 import dotenv from 'dotenv'
 import cookieParser from 'cookie-parser'
+import cors from 'cors'
 
 // Importing Routes
 import authRoute from './routes/auth.route.js';
@@ -10,6 +11,12 @@ import submissionRoute from './routes/submission.route.js';
 
 
 dotenv.config()
+
+//cors
+app.use(cors({
+    origin: 'http://localhost:5173',
+    credentials: true,
+}));
  
 const app = express();
 const port = process.env.PORT
