@@ -3,24 +3,52 @@ import { Route, Routes, Navigate } from 'react-router-dom'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import useStore from './store/store'
+import { Loader2 } from 'lucide-react'
+import Layout from './components/layout/Layout'
 
 const App = () => {
-  let authenticated = false  // This should be replaced with real authentication logic
+  const { authUser, checkAuth, isCheckingAuth } = useStore()
+
+  React.useEffect(() => {
+    checkAuth()
+  }, [checkAuth])
+
+  if (isCheckingAuth && !authUser) {
+    return <div className='flex items-center justify-center h-screen'>
+      <Loader2 className='size-10 animate-spin' />
+    </div>
+  }
+
   return (
     <Routes>
       <Route
-        path="/"
-        element={authenticated ? <Home /> : <Navigate to={'/login'} />}
+        path='/'
+        element={<Layout />}
+      />
+
+      <Route
+        index
+        element={authUser ? <Home /> : <Navigate to={'/login'} />}
       />
 
       <Route
         path="/login"
-        element={!authenticated ? < Login /> : <Navigate to={'/'} />}
+        element={!authUser ? < Login /> : <Navigate to={'/'} />}
       />
 
       <Route
         path="/register"
-        element={!authenticated ? <Register /> : <Navigate to={'/'} />} />
+        element={!authUser ? <Register /> : <Navigate to={'/'} />} />
+
+      <Route
+        element={<AdminRoute />}
+      />
+
+      <Route
+      path='add-problem'
+      element={authUser ? <AddProblem />: <Navigate to={'/login'} />}
+      />
     </Routes>
   )
 }

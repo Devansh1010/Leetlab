@@ -1,0 +1,62 @@
+import { create } from 'zustand'
+import { axiosInstance } from '../libs/axios';
+
+const useStore = create((set) => ({
+    authUser: null,
+    isSigningUp: false,
+    isSigningIn: false,
+    isCheckingAuth: false,
+
+
+    checkAuth: async () => {
+        set({ isCheckingAuth: true });
+        try {
+            const response = await axiosInstance.get('/auth/me');
+            set({ authUser: response.data.user })
+        } catch (error) {
+            set({ authUser: null })
+            console.error("Error checking auth:", error);
+        } finally {
+            set({ isCheckingAuth: false });
+        }
+    },
+
+    signin: async (credetials) => {
+        set({ isSigningIn: true });
+        try {
+            const response = await axiosInstance.post('/auth/login', credetials);
+            set({ authUser: response.data.user });
+        } catch (error) {
+            console.error("Error during login:", error);
+            set({ authUser: null });
+        } finally {
+            set({ isSigningIn: false });
+        }
+    },
+
+    logout: async () => {
+        try {
+            const response = await axiosInstance.post('/auth/logout');
+            set({ authUser: null });
+        } catch (error) {
+            console.error("Error during login:", error);
+            // set({ authUser: response.data.user });
+        }
+    },
+
+    signup: async (credetials) => {
+        set({ isSigningUp: true });
+        try {
+            const response = await axiosInstance.post('/auth/register', credetials);
+            set({ authUser: response.data.user });
+        } catch (error) {
+            console.error("Error during login:", error);
+            set({ authUser: null });
+        } finally {
+            set({ isSigningUp: false });
+        }
+    }
+
+}));
+
+export default useStore;

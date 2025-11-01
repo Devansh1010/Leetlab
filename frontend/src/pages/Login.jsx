@@ -14,10 +14,13 @@ import {
 } from 'lucide-react'
 
 import { loginSchema } from '../utils/validation'
+import useStore from '../store/store'
 const Login = () => {
 
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
+
+  const { isSigningIn, signin } = useStore()
 
   const {
     register,
@@ -32,10 +35,11 @@ const Login = () => {
     console.log(data)
     setLoading(true)
     try {
-
+      await signin(data)
+      console.log("Logged in successfully")
     } catch (error) {
-
-    } finally{
+      console.error("Login failed:", error)
+    } finally {
       setLoading(false)
     }
   }

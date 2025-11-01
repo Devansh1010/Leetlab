@@ -14,10 +14,16 @@ import {
 } from 'lucide-react'
 
 import { registerSchema } from '../utils/validation'
+import useStore from '../store/store'
+import { is } from 'zod/v4/locales'
+
+
 const Register = () => {
 
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
+
+
 
   const {
     register,
@@ -28,14 +34,18 @@ const Register = () => {
     resolver: zodResolver(registerSchema),
   })
 
+
+  const { signup, isSigningUp } = useStore()
+
   const onSubmit = async (data) => {
     console.log(data)
     setLoading(true)
     try {
-
+      const res = await signup(data)
+      console.log("User registered successfully", res.data)
     } catch (error) {
-
-    } finally{
+      console.error("Error registering user:", error)
+    } finally {
       setLoading(false)
     }
   }
@@ -138,7 +148,7 @@ const Register = () => {
             <button
               type="submit"
               className="btn btn-primary w-full"
-              disabled={loading}
+              disabled={isSigningUp}
             >
               {loading ? (
                 <>
