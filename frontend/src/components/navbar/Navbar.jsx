@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import  useStore  from '../../store/store.js'
 import LogoutButton from '../logoutButton/LogoutButton.jsx'
+import { Code, LogOut, User } from 'lucide-react'
 
 const Navbar = () => {
 

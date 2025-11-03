@@ -5,9 +5,9 @@ import { Navigate, Outlet } from 'react-router-dom'
 
 const AdminRoute = () => {
 
-    const { authUser, checkAuth } = useStore()
+    const { authUser, isCheckingAuth } = useStore()
 
-    if (checkAuth) return <div className='flex justify-center h-screen'><Loader2 className=' animate-spin size-10'></Loader2></div>
+    if (isCheckingAuth) return <div className='flex justify-center h-screen'><Loader2 className=' animate-spin size-10'></Loader2></div>
 
     if (!authUser || authUser.role != "ADMIN") return <Navigate to={'/'} />
 

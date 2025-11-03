@@ -2,9 +2,9 @@ import axios from 'axios'
 
 export const getAllLanguages = (language) => {
     const LanguageMap = {
-        "JavaScript": 63,
-        "Python": 71,
-        "Java": 62,
+        "JAVASCRIPT": 63,
+        "PYTHON": 71,
+        "JAVA": 62,
     }
 
     return LanguageMap[language];
@@ -44,9 +44,9 @@ export const poolBathResults = async (tokens) => {
 
 export const getLanguageById = (language_id) => {
     const LanguageMap = {
-        63: "JavaScript",
-        71: "Python",
-        62: "Java",
+        63: "JAVASCRIPT",
+        71: "PYTHON",
+        62: "JAVA",
     }
 
     return LanguageMap[language_id];

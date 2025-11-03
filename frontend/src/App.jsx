@@ -6,6 +6,8 @@ import Register from './pages/Register'
 import useStore from './store/store'
 import { Loader2 } from 'lucide-react'
 import Layout from './components/layout/Layout'
+import AddProblem from './pages/AddProblem'
+import AdminRoute from './components/layout/AdminRoute'
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth } = useStore()
@@ -28,7 +30,7 @@ const App = () => {
       />
 
       <Route
-        index
+        path='/home'
         element={authUser ? <Home /> : <Navigate to={'/login'} />}
       />
 
@@ -41,14 +43,13 @@ const App = () => {
         path="/register"
         element={!authUser ? <Register /> : <Navigate to={'/'} />} />
 
-      <Route
-        element={<AdminRoute />}
-      />
+      <Route element = {<AdminRoute />} >
+        <Route
+          path='add-problem'
+          element={authUser ? <AddProblem /> : <Navigate to={'/login'} />}
+        />
+      </Route>
 
-      <Route
-      path='add-problem'
-      element={authUser ? <AddProblem />: <Navigate to={'/login'} />}
-      />
     </Routes>
   )
 }

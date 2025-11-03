@@ -7,14 +7,14 @@ export const createProblem = async (req, res) => {
         const { title, description, difficulty, tags, example, contraints, testcases, codeSnippets, referenceSolutions, hints, editorial } = req.body
 
 
-        if (!title || !description || !difficulty || !testcases || !referenceSolutions || !codeSnippets || !editorial) {
+        if (!title || !description || !difficulty || !testcases || !referenceSolutions || !codeSnippets) {
             return res.status(400).json({ status: 400, message: "All fields are required!" })
         }
 
         //Check User Role
         const uesrRole = req.user.role
 
-        if (uesrRole !== 'admin') {
+        if (uesrRole !== 'ADMIN') {
             return res.status(403).json({ status: 403, message: "Forbidden: You don't have permission to perform this action." })
         }
 
@@ -52,25 +52,27 @@ export const createProblem = async (req, res) => {
         }
 
 
+        console.log(example)
+
 
         const newProblem = await db.problem.create({
             data: {
                 title,
                 description,
-                difficulty,
                 tags,
-                example,
-                contraints,
+                difficulty,
+                userId: req.user.id,
+                example : {},
+                contraints : "",
+                hints,
+                editorial,
                 testcases,
                 codeSnippets,
                 referenceSolutions,
-                hints,
-                editorial,
-                userId: req.user.id,
             }
         })
 
-        console.log("New Problem Created:", newProblem)
+        console.log("New Problem Created:", newProblem) 
         return res.status(201).json({
             status: 201,
             message: "Problem created successfully!",
