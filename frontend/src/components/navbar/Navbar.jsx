@@ -5,10 +5,7 @@ import LogoutButton from '../logoutButton/LogoutButton.jsx'
 import { Code, LogOut, User } from 'lucide-react'
 
 const Navbar = () => {
-
   const { authUser } = useStore()
-
-  console.log("AUTH_USER", authUser)
 
   return (
     <nav className="sticky top-0 z-50 w-full py-5">
@@ -53,15 +50,15 @@ const Navbar = () => {
                 </p>
                 <hr className="border-gray-200/10" />
               </li>
-              <li>
-                <Link
-                  to="/profile"
-                  className="hover:bg-primary hover:text-white text-base font-semibold"
-                >
-                  <User className="w-4 h-4 mr-2" />
-                  My Profile
-                </Link>
-              </li>
+                <li>
+                  <Link
+                    to="/profile"
+                    className="hover:bg-primary hover:text-white text-base font-semibold"
+                  >
+                    <User className="w-4 h-4 mr-2" />
+                    My Profile
+                  </Link>
+                </li>
               {authUser?.role === "ADMIN" && (
                 <li>
                   <Link

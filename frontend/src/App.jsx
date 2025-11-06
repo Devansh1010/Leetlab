@@ -24,34 +24,37 @@ const App = () => {
 
   return (
     <Routes>
-      <Route
-        path='/'
-        element={<Layout />}
-      />
-
-      <Route
-        path='/home'
-        element={authUser ? <Home /> : <Navigate to={'/login'} />}
-      />
-
-      <Route
-        path="/login"
-        element={!authUser ? < Login /> : <Navigate to={'/'} />}
-      />
-
-      <Route
-        path="/register"
-        element={!authUser ? <Register /> : <Navigate to={'/'} />} />
-
-      <Route element = {<AdminRoute />} >
+      <Route path="/" element={<Layout />}>
+  
         <Route
-          path='add-problem'
-          element={authUser ? <AddProblem /> : <Navigate to={'/login'} />}
+          index
+          element={authUser ? <Home /> : <Navigate to="/login" />}
         />
+
+        <Route
+          path="home"
+          element={authUser ? <Home /> : <Navigate to="/login" />}
+        />
+        
+        <Route element={<AdminRoute />}>
+          <Route
+            path="add-problem"
+            element={authUser ? <AddProblem /> : <Navigate to="/login" />}
+          />
+        </Route>
+        
       </Route>
 
+      <Route
+          path="login"
+          element={!authUser ? <Login /> : <Navigate to="/" />}
+        />
+        <Route
+          path="register"
+          element={!authUser ? <Register /> : <Navigate to="/" />}
+        />
     </Routes>
-  )
+  );
 }
 
 export default App

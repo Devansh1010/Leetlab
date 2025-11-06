@@ -253,7 +253,7 @@ export const solvedProblemsByUser = async (req, res) => {
         
         return res.status(200).json({
             status: 200,
-            problems
+            solvedProblems: problems
         })
     } catch (error) {
         console.error("Error fetching solved problems:", error)
