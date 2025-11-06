@@ -8,6 +8,7 @@ import { Loader2 } from 'lucide-react'
 import Layout from './components/layout/Layout'
 import AddProblem from './pages/AddProblem'
 import AdminRoute from './components/layout/AdminRoute'
+import Admin from './pages/Admin'
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth } = useStore()
@@ -24,8 +25,21 @@ const App = () => {
 
   return (
     <Routes>
+      <Route element={<AdminRoute />}>
+        <Route
+          path='admin'
+          element={<Admin />}
+        />
+
+        <Route
+          path="add-problem"
+          element={authUser ? <AddProblem /> : <Navigate to="/login" />}
+        />
+
+      </Route>
+
       <Route path="/" element={<Layout />}>
-  
+
         <Route
           index
           element={authUser ? <Home /> : <Navigate to="/login" />}
@@ -35,24 +49,19 @@ const App = () => {
           path="home"
           element={authUser ? <Home /> : <Navigate to="/login" />}
         />
-        
-        <Route element={<AdminRoute />}>
-          <Route
-            path="add-problem"
-            element={authUser ? <AddProblem /> : <Navigate to="/login" />}
-          />
-        </Route>
-        
+
+
+
       </Route>
 
       <Route
-          path="login"
-          element={!authUser ? <Login /> : <Navigate to="/" />}
-        />
-        <Route
-          path="register"
-          element={!authUser ? <Register /> : <Navigate to="/" />}
-        />
+        path="login"
+        element={!authUser ? <Login /> : <Navigate to="/" />}
+      />
+      <Route
+        path="register"
+        element={!authUser ? <Register /> : <Navigate to="/" />}
+      />
     </Routes>
   );
 }
