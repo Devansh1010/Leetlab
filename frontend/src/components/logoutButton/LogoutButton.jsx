@@ -1,7 +1,7 @@
 import React from 'react'
 import useStore from '../../store/store';
 
-const LogoutButton = ({ childern }) => {
+const LogoutButton = ({ children, className }) => {
     const { logout } = useStore();
 
     const handleLogout = async () => {
@@ -11,9 +11,9 @@ const LogoutButton = ({ childern }) => {
 
         <button
             onClick={handleLogout}
-            className="hover:bg-primary hover:text-white text-base font-semibold"
+            className={`hover:bg-base-300 hover:text-white text-base font-semibold ${className}`}
         >
-            {childern}
+            { children }
         </button>
     )
 }

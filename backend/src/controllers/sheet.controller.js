@@ -1,14 +1,14 @@
 import { db } from '../libs/db.js'
 
 
-export const getAllPlaylists = async (req, res) => {
+export const getAllSheets = async (req, res) => {
     try {
         const userId = req.user.id;
         if (!userId) {
             return res.status(401).json({ message: "Unauthorized" });
         }
 
-        const playlists = await db.playlist.findMany({
+        const sheets = await db.sheet.findMany({
             where: {
                 userId: userId
             },
@@ -21,51 +21,51 @@ export const getAllPlaylists = async (req, res) => {
             }
         });
 
-        console.log("Fetched playlists:", playlists);
-        res.status(200).json({ message: "success", playlists });
+        console.log("Fetched sheets:", sheets);
+        res.status(200).json({ message: "success", sheets });
 
     } catch (error) {
 
-        console.error("Error fetching playlists:", error);
+        console.error("Error fetching sheets:", error);
         res.status(500).json({ message: "Internal server error" });
     }
 }
 
-export const createPlaylist = async (req, res) => {
+export const createSheet = async (req, res) => {
     try {
-        const { name, description } = req.body;
+        const { title, description, problems } = req.body;
         const userId = req.user.id;
 
         if (!userId) {
             return res.status(401).json({ message: "Unauthorized" });
         }
 
-        if (!name) {
-            return res.status(400).json({ message: "Playlist name is required" });
+        if (!title) {
+            return res.status(400).json({ message: "sheet name is required" });
         }
 
-        const newPlaylist = await db.playlist.create({
+        const newSheet = await db.sheet.create({
             data: {
-                name,
+                title,
                 description,
-                userId
+                problems
             }
         });
 
-        if (!newPlaylist) {
-            return res.status(400).json({ message: "Failed to create playlist" });
+        if (!newSheet) {
+            return res.status(400).json({ message: "Failed to create sheeet" });
         }
 
-        res.status(201).json({ message: "Playlist created successfully", playlist: newPlaylist });
+        res.status(201).json({ message: "Sheet created successfully", playlist: newSheet });
     } catch (error) {
-        console.error("Error creating playlist:", error);
+        console.error("Error creating sheet:", error);
         res.status(500).json({ message: "Internal server error" });
     }
 }
 
-export const getPlaylistById = async (req, res) => {
+export const getSheetById = async (req, res) => {
     try {
-        const { playlistId } = req.params;
+        const { sheetId } = req.params;
 
         const userId = req.user.id;
 
@@ -73,13 +73,13 @@ export const getPlaylistById = async (req, res) => {
             return res.status(401).json({ message: "Unauthorized" });
         }
 
-        if (!playlistId) {
-            return res.status(400).json({ message: "Playlist ID is required" });
+        if (!sheetId) {
+            return res.status(400).json({ message: "Sheet ID is required" });
         }
 
-        const playlist = await db.playlist.findUnique({
+        const sheet = await db.sheet.findUnique({
             where: {
-                id: playlistId,
+                id: sheetId,
                 userId: userId
             },
             include: {
@@ -91,86 +91,87 @@ export const getPlaylistById = async (req, res) => {
             }
         });
 
-        if (!playlist) {
-            return res.status(404).json({ message: "Playlist not found" });
+        if (!sheet) {
+            return res.status(404).json({ message: "Sheet not found" });
         }
 
-        res.status(200).json({ message: "success", playlist });
+        res.status(200).json({ message: "success", sheet });
+
     } catch (error) {
-        console.error("Error fetching playlist by ID:", error);
+        console.error("Error fetching sheet by ID:", error);
         res.status(500).json({ message: "Internal server error" });
     }
 }
 
 export const updatePlaylist = async (req, res) => {
     try {
-        const { playlistId } = req.params;
-        const { name, description } = req.body;
+        const { sheetId } = req.params;
+        const { title, description } = req.body;
         const userId = req.user.id;
 
         if (!userId) {
             return res.status(401).json({ message: "Unauthorized" });
         }
 
-        if (!playlistId) {
+        if (!sheetId) {
             return res.status(400).json({ message: "Playlist ID is required" });
         }
 
-        const updatedPlaylist = await db.playlist.update({
+        const updatedSheet = await db.sheet.update({
             where: {
-                id: playlistId
+                id: sheetId
             },
             data: {
-                name,
+                title,
                 description
             }
         });
 
-        if (!updatedPlaylist) {
-            return res.status(400).json({ message: "Failed to update playlist" });
+        if (!updatedSheet) {
+            return res.status(400).json({ message: "Failed to update Sheet" });
         }
 
-        res.status(200).json({ message: "Playlist updated successfully", playlist: updatedPlaylist });
+        res.status(200).json({ message: "Sheet updated successfully", playlist: updatedPlaylist });
     } catch (error) {
-        console.error("Error updating playlist:", error);
+        console.error("Error updating Sheet:", error);
         res.status(500).json({ message: "Internal server error" });
     }
 }
 
 export const deletePlaylist = async (req, res) => {
     try {
-        const { playlistId } = req.params;
+        const { sheetId } = req.params;
         const userId = req.user.id;
 
         if (!userId) {
             return res.status(401).json({ message: "Unauthorized" });
         }
 
-        if (!playlistId) {
+        if (!sheetId) {
             return res.status(400).json({ message: "Playlist ID is required" });
         }
 
-        const deletedPlaylist = await db.playlist.delete({
+        const deletedSheet = await db.sheet.delete({
             where: {
-                id: playlistId
+                id: sheetId
             }
         });
 
-        if (!deletedPlaylist) {
-            return res.status(400).json({ message: "Failed to delete playlist" });
+        if (!deletedSheet) {
+            return res.status(400).json({ message: "Failed to delete sheet" });
         }
 
-        res.status(200).json({ message: "Playlist deleted successfully" });
+        res.status(200).json({ message: "Sheet deleted successfully" });
     } catch (error) {
-        console.error("Error deleting playlist:", error);
+        console.error("Error deleting Sheet:", error);
         res.status(500).json({ message: "Internal server error" });
     }
 }
 
-export const addProblemToPlaylist = async (req, res) => {
+export const addProblemToSheet = async (req, res) => {
     try {
 
-        const { playlistId } = req.params;
+        const { sheetId } = req.params;
         const { problemIds } = req.body;
         const userId = req.user.id;
 
@@ -178,49 +179,49 @@ export const addProblemToPlaylist = async (req, res) => {
             return res.status(401).json({ message: "Unauthorized" });
         }
 
-        if (!Array.isArray(problemIds) || problemIds.length === 0 || !playlistId) {
-            return res.status(400).json({ message: "Playlist ID and Problem ID(s) are required" });
+        if (!Array.isArray(problemIds) || problemIds.length === 0 || !sheetId) {
+            return res.status(400).json({ message: "Sheet ID and Problem ID(s) are required" });
         }
 
-        const playlist = await db.playlist.findUnique({
+        const sheet = await db.sheet.findUnique({
             where: {
-                id: playlistId
+                id: sheetId
             }
         });
 
-        if (!playlist) {
-            return res.status(404).json({ message: "Playlist not found" });
+        if (!sheet) {
+            return res.status(404).json({ message: "Sheet not found" });
         }
 
-        //can be avoid 
-        
+        //Problems Finding
+
         // const problems = await db.problem.findMany({
         //     where: problemIds.map(id => ({ id }))
         // });
 
-        // if (!problems  || problems.length === 0) {
+        // if (!problems || problems.length === 0) {
         //     return res.status(404).json({ message: "Problem not found" });
         // }
 
-        const addedProblemInPlaylist = await db.problemInPlaylist.createMany({
+        const addedProblemInSheet = await db.sheet.createMany({
             data: problemIds.map(problemId => ({
-                playlistId: playlistId,
+                sheetId: sheetId,
                 problemId: problemId
             })),
             skipDuplicates: true
         });
 
-        res.status(200).json({ message: "Problem added to playlist successfully", problemInPlaylist: addedProblemInPlaylist });
+        res.status(200).json({ message: "Problem added to Sheet successfully", problemInSheet: addedProblemInSheet });
 
     } catch (error) {
-        console.error("Error adding problem to playlist:", error);
+        console.error("Error adding problem to sheet:", error);
         res.status(500).json({ message: "Internal server error" });
     }
 }
 
-export const removeProblemToPlaylist = async (req, res) => {
+export const removeProblemToSheet = async (req, res) => {
     try {
-        const { playlistId } = req.params;
+        const { sheetId } = req.params;
         const { problemIds } = req.body;
         const userId = req.user.id;
 
@@ -228,21 +229,22 @@ export const removeProblemToPlaylist = async (req, res) => {
             return res.status(401).json({ message: "Unauthorized" });
         }
 
-        if (!playlistId || !Array.isArray(problemIds) || problemIds.length === 0) {
+        if (!sheetId || !Array.isArray(problemIds) || problemIds.length === 0) {
             return res.status(400).json({ message: "Playlist ID and Problem ID are required" });
         }
 
-        const playlist = await db.playlist.findUnique({
+        const sheet = await db.sheet.findUnique({
             where: {
-                id: playlistId
+                id: sheetId
             }
         });
 
-        if (!playlist) {
-            return res.status(404).json({ message: "Playlist not found" });
+        if (!sheet) {
+            return res.status(404).json({ message: "Sheet not found" });
         }
 
-        //Can be avoid
+       //Can be avoid
+       
         // const problem = await db.problem.findMany({
         //     where: {
         //         id: problemIds.map(id => id)
@@ -253,16 +255,17 @@ export const removeProblemToPlaylist = async (req, res) => {
         //     return res.status(404).json({ message: "Problem not found" });
         // }
 
-        const removedProblemInPlaylist = await db.problemInPlaylist.deleteMany({
+
+        const removedProblemInSheet = await db.sheet.deleteMany({
             where: problemIds.map(problemId => ({
-                playlistId: playlistId,
+                playlistId: sheetId,
                 problemId: problemId
             }))
         });
 
-        res.status(200).json({ message: "Problem removed from playlist successfully", problemInPlaylist: removedProblemInPlaylist });
+        res.status(200).json({ message: "Problem removed from sheet successfully", problemInPlaylist: removedProblemInPlaylist });
     } catch (error) {
-        console.error("Error removing problem from playlist:", error);
+        console.error("Error removing problem from sheet:", error);
         res.status(500).json({ message: "Internal server error" });
     }
 }
