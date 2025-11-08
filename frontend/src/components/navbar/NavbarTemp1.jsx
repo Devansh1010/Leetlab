@@ -6,6 +6,9 @@ import { Code, LogOut, User } from 'lucide-react'
 
 const Navbar = () => {
     const { authUser } = useStore()
+    console.log("Auth User in Navbar:", authUser);
+    const streakCount = authUser?.streakCount || 0;
+    const longestStreak = authUser?.longestStreak || 0;
     return (
         <div className="navbar bg-neutral shadow-sm">
             <div className="navbar-start">
@@ -34,8 +37,11 @@ const Navbar = () => {
             </div>
             <div className="navbar-center hidden lg:flex">
                 <ul className="menu menu-horizontal px-1">
-                    <li className='text-neutral-content text-lg'><Link>Problems</Link></li>
-                    <li className='text-neutral-content text-lg'><Link>Leaderboard</Link></li>
+                    {
+                        authUser?.role === "ADMIN" && <li className='text-neutral-content text-lg'><Link to={'/'}>Dashboard</Link></li>
+                    }
+                    <li className='text-neutral-content text-lg'><Link to={'/'}>Problems</Link></li>
+                    <li className='text-neutral-content text-lg'><Link to={'/leaderboard'}>Leaderboard</Link></li>
                     <li className='text-neutral-content text-lg'><Link>Playlists</Link></li>
                     <li className='text-neutral-content text-lg'> <Link>Pricing</Link></li>
                 </ul>
@@ -63,7 +69,7 @@ const Navbar = () => {
                             tabIndex={0}
                             className="menu menu-sm dropdown-content mt-3 z-1 p-2 shadow bg-base-100 rounded-box w-52 space-y-3"
                         >
-                            {/* Admin Option */}
+
 
 
                             {/* Common Options */}
@@ -84,26 +90,24 @@ const Navbar = () => {
                                     My Profile
                                 </Link>
                             </li>
-                            {authUser?.role === "ADMIN" && (
-                                <li>
-                                    <Link
-                                        to="/add-problem"
-                                        className="hover:bg-primary hover:text-white text-base font-semibold"
-                                    >
-                                        <Code className="w-4 h-4 mr-1" />
-                                        Add Problem
-                                    </Link>
-                                </li>
-                            )}
+
 
                         </ul>
                     </div>
-                    
+
+                    <div className='flex gap-1 justify-center items-center'>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-code-icon lucide-code"><path d="m16 18 6-6-6-6" /><path d="m8 6-6 6 6 6" /></svg>
+
+                        <h2>{streakCount}</h2>
+
                         <LogoutButton className="hover:text-white cursor-pointer btn btn-ghost">
                             <LogOut className="w-4 h-4 mr-2" />
                             Logout
                         </LogoutButton>
-                    
+                    </div>
+
+
+
                 </div>
             </div>
 

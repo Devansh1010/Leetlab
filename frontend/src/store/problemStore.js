@@ -12,10 +12,10 @@ const useProblemStore = create(set => ({
     getAllProblems : async () => {
         try {
             set({isGettingProblems: true})
-
+        
             const res = await axiosInstance.get('/problems/getAllProblems')
-
             set({problems: res.data.problems})
+            
         } catch (error) {
             console.log("Error while getting all problems in store", error)
         } finally {
@@ -29,7 +29,7 @@ const useProblemStore = create(set => ({
 
             const res = await axiosInstance.get(`/problems/getProblem/${problemId}`)
 
-            set({problems: res.data.problem})
+            set({problem: res.data.problem})
         } catch (error) {
             console.log("Error while getting problem in store", error)
         } finally {

@@ -27,6 +27,10 @@ model User {
   role     UserRole @default(USER)
   password String
 
+  streakCount    Int             @default(0) 
+  lastLoginDate  DateTime? 
+  longestStreak  Int             @default(0) 
+  
   problems       Problem[]
   submissions    Submission[]
   problemsSolved ProblemSolved[]

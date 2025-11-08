@@ -1,4 +1,4 @@
-import React from 'react'
+
 
 const SheetCard = ({image, title, description, btnTitle="Explore Now"}) => {
     return (

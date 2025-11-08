@@ -88,6 +88,7 @@ export const createProblem = async (req, res) => {
 export const getAllProblems = async (req, res) => {
     try {
         const problems = await db.problem.findMany()
+        
         return res.status(200).json({
             status: 200,
             problems

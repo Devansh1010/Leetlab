@@ -7,8 +7,11 @@ import useStore from './store/store'
 import { Loader2 } from 'lucide-react'
 import Layout from './components/layout/Layout'
 import AddProblem from './pages/AddProblem'
+import AddSheet from './pages/AddSheet'
 import AdminRoute from './components/layout/AdminRoute'
 import Admin from './pages/Admin'
+import Leaderboard from './pages/Leaderboard'
+import AdminLayout from './components/layout/AdminLayout'
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth } = useStore()
@@ -25,44 +28,40 @@ const App = () => {
 
   return (
     <Routes>
+
+      {/* ADMIN ROUTES */}
       <Route element={<AdminRoute />}>
-        <Route
-          path='admin'
-          element={<Admin />}
-        />
-
-        <Route
-          path="add-problem"
-          element={authUser ? <AddProblem /> : <Navigate to="/login" />}
-        />
-
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<Admin />} />
+          <Route path="add-problem" element={<AddProblem />} />
+          <Route path="add-sheet" element={<AddSheet />} />
+        </Route>
       </Route>
 
+      {/* USER ROUTES */}
       <Route path="/" element={<Layout />}>
-
         <Route
           index
-          element={authUser ? <Home /> : <Navigate to="/login" />}
+          element={
+            !authUser ? (
+              <Navigate to="/login" />
+            ) : authUser.role === "ADMIN" ? (
+              <Navigate to="/admin" />
+            ) : (
+              <Home />
+            )
+          }
         />
 
-        <Route
-          path="home"
-          element={authUser ? <Home /> : <Navigate to="/login" />}
-        />
-
-
-
+        <Route path="leaderboard" element={authUser ? <Leaderboard /> : <Navigate to="/login" />} />
       </Route>
 
-      <Route
-        path="login"
-        element={!authUser ? <Login /> : <Navigate to="/" />}
-      />
-      <Route
-        path="register"
-        element={!authUser ? <Register /> : <Navigate to="/" />}
-      />
+      {/* AUTH ROUTES */}
+      <Route path="login" element={!authUser ? <Login /> : <Navigate to="/" />} />
+      <Route path="register" element={!authUser ? <Register /> : <Navigate to="/" />} />
+
     </Routes>
+
   );
 }
 

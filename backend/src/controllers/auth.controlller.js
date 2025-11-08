@@ -72,6 +72,7 @@ export const register = async (req, res) => {
         res.status(500).json({ message: "Error ocured while creating User" })
     }
 }
+
 export const login = async (req, res) => {
     try {
         const { email, password } = req.body
@@ -97,6 +98,36 @@ export const login = async (req, res) => {
             res.status(401).json({ status: 401, message: "Invalid Credetiatls🤷‍♂️" })
         }
 
+
+        //? Streak Logic
+
+        const today = new Date();
+        const lastLogin = user.lastLoginDate ? new Date(user.lastLoginDate) : null;
+
+        let newStreak = user.streakCount;
+        let newLongestStreak = user.longestStreak;
+
+        if (lastLogin) {
+            // Calculate day difference
+            const diffDays = Math.floor((today - lastLogin) / (1000 * 60 * 60 * 24));
+
+            if (diffDays === 1) {
+                // Logged in next day => increase streak
+                newStreak += 1;
+            } else if (diffDays > 1) {
+                // Missed a day => reset streak
+                newStreak = 1;
+            } // diffDays === 0 → same day login → no change
+        } else {
+            // First ever login
+            newStreak = 1;
+        }
+
+        // Update longest streak
+        if (newStreak > newLongestStreak) {
+            newLongestStreak = newStreak;
+        }
+
         const token = jwt.sign({
             id: user.id
         }, process.env.JWT_SERECT)
@@ -110,6 +141,15 @@ export const login = async (req, res) => {
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
 
+        await db.user.update({
+            where: { id: user.id },
+            data: {
+                streakCount: newStreak,
+                longestStreak: newLongestStreak,
+                lastLoginDate: today,
+            },
+        });
+
         console.log(res.cookies)
 
         return res.status(200).json({
@@ -120,7 +160,9 @@ export const login = async (req, res) => {
                 email: user.email,
                 name: user.name,
                 role: user.role,
-                image: user.image
+                image: user.image,
+                streakCount: newStreak,
+                longestStreak: newLongestStreak,
             }
         })
 
@@ -150,9 +192,10 @@ export const logout = async (req, res) => {
         res.status(500).json({ message: "Error ocured while LogOut User" })
     }
 }
+
 export const me = async (req, res) => {
     try {
-     console.log('User from me', req.user)
+        console.log('User from me', req.user)
         return res.status(200).json({
             status: 200,
             message: "User Autheticated!😊",

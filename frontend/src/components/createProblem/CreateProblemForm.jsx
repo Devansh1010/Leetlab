@@ -132,7 +132,7 @@ const CreateProblemForm = () => {
                                     type="button"
                                     className={`btn join-item ${sampleType === "DP" ? "btn-active" : ""
                                         }`}
-                                    onClick={() => setSampleType("array")}
+                                    onClick={() => setSampleType("DP")}
                                 >
                                     DP Problem
                                 </button>
