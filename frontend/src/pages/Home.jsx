@@ -1,8 +1,10 @@
 
 
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import useProblemStore from "../store/problemStore";
 import { Loader2 } from "lucide-react";
+import useStore from '../store/store.js'
+import { selectQuote } from '../utils/quotes.js'
 
 
 const Home = () => {
@@ -11,6 +13,14 @@ const Home = () => {
   const problems = useProblemStore((state) => state.problems);
 
   const [error, setError] = useState("");
+
+  const [quote, setQuote] = useState("Every line of code you write is a vote for the programmer you’re becoming.")
+
+  const { authUser, updateStreak } = useStore()
+
+  useEffect(() => {
+    updateStreak()
+  }, [])
 
   //  Fetch all problems 
   useEffect(() => {
@@ -36,15 +46,16 @@ const Home = () => {
   //  Error handling
   if (error) return <div className="text-red-500 text-center mt-4">{error}</div>;
 
+
+
   return (
     <div>
       <div className="hero bg-base-200 min-h-screen">
         <div className="hero-content text-center">
           <div className="max-w-md">
-            <h1 className="text-5xl font-bold">Hello there</h1>
+            <h1 className="text-5xl font-bold">Hello {authUser.name}</h1>
             <p className="py-6">
-              Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem
-              quasi. In deleniti eaque aut repudiandae et a id nisi.
+              {quote}
             </p>
             <button className="btn btn-primary">Get Started</button>
           </div>
@@ -83,8 +94,8 @@ const Home = () => {
                   <tr
                     key={problem.id || index}
                     className={`transition-colors duration-200 ${index % 2 === 0
-                        ? "bg-gray-50 hover:bg-gray-100"
-                        : "bg-gray-100 hover:bg-gray-200"
+                      ? "bg-gray-50 hover:bg-gray-100"
+                      : "bg-gray-100 hover:bg-gray-200"
                       }`}
                   >
                     {/* ✅ Solved Checkbox */}

@@ -10,8 +10,11 @@ import AddProblem from './pages/AddProblem'
 import AddSheet from './pages/AddSheet'
 import AdminRoute from './components/layout/AdminRoute'
 import Admin from './pages/Admin'
+import Playlist from './pages/Playlist'
+import Price from './pages/Price'
 import Leaderboard from './pages/Leaderboard'
 import AdminLayout from './components/layout/AdminLayout'
+
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth } = useStore()
@@ -54,6 +57,8 @@ const App = () => {
         />
 
         <Route path="leaderboard" element={authUser ? <Leaderboard /> : <Navigate to="/login" />} />
+        <Route path="playlist" element={authUser ? <Playlist /> : <Navigate to="/login" />} />
+        <Route path="pricing" element={authUser ? <Price /> : <Navigate to="/login" />} />
       </Route>
 
       {/* AUTH ROUTES */}

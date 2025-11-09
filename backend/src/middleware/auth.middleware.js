@@ -6,7 +6,7 @@ dotenv.config()
 
 export const authMiddleware = async (req, res, next) => {
     try {
-        console.log("Auth Middleware Invoked");
+        
         const token = await req.cookies.jwt;
 
         if (!token) {

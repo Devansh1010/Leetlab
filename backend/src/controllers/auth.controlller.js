@@ -98,36 +98,6 @@ export const login = async (req, res) => {
             res.status(401).json({ status: 401, message: "Invalid Credetiatls🤷‍♂️" })
         }
 
-
-        //? Streak Logic
-
-        const today = new Date();
-        const lastLogin = user.lastLoginDate ? new Date(user.lastLoginDate) : null;
-
-        let newStreak = user.streakCount;
-        let newLongestStreak = user.longestStreak;
-
-        if (lastLogin) {
-            // Calculate day difference
-            const diffDays = Math.floor((today - lastLogin) / (1000 * 60 * 60 * 24));
-
-            if (diffDays === 1) {
-                // Logged in next day => increase streak
-                newStreak += 1;
-            } else if (diffDays > 1) {
-                // Missed a day => reset streak
-                newStreak = 1;
-            } // diffDays === 0 → same day login → no change
-        } else {
-            // First ever login
-            newStreak = 1;
-        }
-
-        // Update longest streak
-        if (newStreak > newLongestStreak) {
-            newLongestStreak = newStreak;
-        }
-
         const token = jwt.sign({
             id: user.id
         }, process.env.JWT_SERECT)
@@ -140,15 +110,6 @@ export const login = async (req, res) => {
             secure: process.env.NODE_ENV !== 'development',
             maxAge: 7 * 24 * 60 * 60 * 1000
         })
-
-        await db.user.update({
-            where: { id: user.id },
-            data: {
-                streakCount: newStreak,
-                longestStreak: newLongestStreak,
-                lastLoginDate: today,
-            },
-        });
 
         console.log(res.cookies)
 
@@ -195,7 +156,7 @@ export const logout = async (req, res) => {
 
 export const me = async (req, res) => {
     try {
-        console.log('User from me', req.user)
+        
         return res.status(200).json({
             status: 200,
             message: "User Autheticated!😊",
@@ -206,3 +167,45 @@ export const me = async (req, res) => {
         res.status(500).json({ message: "Error ocured while get User" })
     }
 }
+
+
+
+export const checkDailyStreak = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const user = await db.user.findUnique({ where: { id: userId } });
+
+    const today = new Date();
+    const lastActive = new Date(user.lastActiveDate);
+
+    // Calculate difference in days
+    const diffDays = Math.floor((today - lastActive) / (1000 * 60 * 60 * 24));
+
+    let newStreak = user.streakCount;
+
+    if (diffDays === 1) {
+      // User came next day – increment streak
+      newStreak += 1;
+    } else if (diffDays > 1) {
+      // Missed a day – reset streak
+      newStreak = 1;
+    }
+
+    if (diffDays >= 1) {
+      // Update streak only if a new day started
+      await db.user.update({
+        where: { id: userId },
+        data: {
+          streakCount: newStreak,
+          lastActiveDate: today,
+        },
+      });
+    }
+
+    console.log(`User ${userId} streak updated to ${newStreak}`);
+    res.json({ message: "Streak checked/updated", streak: newStreak });
+  } catch (error) {
+    console.error("Error checking streak:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
