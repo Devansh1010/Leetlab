@@ -156,7 +156,7 @@ export const logout = async (req, res) => {
 
 export const me = async (req, res) => {
     try {
-        
+
         return res.status(200).json({
             status: 200,
             message: "User Autheticated!😊",
@@ -170,42 +170,69 @@ export const me = async (req, res) => {
 
 
 
+function startOfUTCDate(d) {
+    const dt = new Date(d);
+    return Date.UTC(dt.getUTCFullYear(), dt.getUTCMonth(), dt.getUTCDate());
+}
+
 export const checkDailyStreak = async (req, res) => {
-  try {
-    const userId = req.user.id;
-    const user = await db.user.findUnique({ where: { id: userId } });
+    try {
+        const userId = req.user?.id;
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
 
-    const today = new Date();
-    const lastActive = new Date(user.lastActiveDate);
+        const user = await prisma.user.findUnique({ where: { id: userId } });
+        if (!user) return res.status(404).json({ error: "User not found" });
 
-    // Calculate difference in days
-    const diffDays = Math.floor((today - lastActive) / (1000 * 60 * 60 * 24));
+        const now = new Date();
+        const todayUTC = startOfUTCDate(now); // midnight UTC for today
 
-    let newStreak = user.streakCount;
+        if (!user.lastLoginDate) {
+            // First-time activity
+            await db.user.update({
+                where: { id: userId },
+                data: {
+                    streakCount: 1,
+                    lastLoginDate: now,
+                },
+            });
+            return res.json({ streak: 1 });
+        }
 
-    if (diffDays === 1) {
-      // User came next day – increment streak
-      newStreak += 1;
-    } else if (diffDays > 1) {
-      // Missed a day – reset streak
-      newStreak = 1;
+        const lastUTC = startOfUTCDate(user.lastLoginDate);
+        const msPerDay = 86_400_000; // 1000*60*60*24
+
+        const diffDays = Math.floor((todayUTC - lastUTC) / msPerDay);
+
+        let newStreak = user.streakCount ?? 0;
+
+        if (diffDays === 0) {
+            // Same calendar day -> no change
+            return res.json({ streak: newStreak });
+        } else if (diffDays === 1) {
+            newStreak += 1;
+        } else if (diffDays > 1) {
+            newStreak = 1;
+        } else {
+            // Negative diff -> clocks mismatch, don't change streak but update lastLoginDate
+            await prisma.user.update({
+                where: { id: userId },
+                data: { lastLoginDate: now },
+            });
+            return res.json({ streak: newStreak });
+        }
+
+        // Persist change
+        await db.user.update({
+            where: { id: userId },
+            data: {
+                streakCount: newStreak,
+                lastLoginDate: now,
+            },
+        });
+
+        return res.json({ streak: newStreak });
+    } catch (err) {
+        console.error("Error checking streak:", err);
+        return res.status(500).json({ error: "Internal Server Error" });
     }
-
-    if (diffDays >= 1) {
-      // Update streak only if a new day started
-      await db.user.update({
-        where: { id: userId },
-        data: {
-          streakCount: newStreak,
-          lastActiveDate: today,
-        },
-      });
-    }
-
-    console.log(`User ${userId} streak updated to ${newStreak}`);
-    res.json({ message: "Streak checked/updated", streak: newStreak });
-  } catch (error) {
-    console.error("Error checking streak:", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
 };
