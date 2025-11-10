@@ -11,7 +11,7 @@ const Navbar = () => {
     const longestStreak = authUser?.longestStreak || 0;
 
     return (
-        <div className="navbar bg-#f8fafc shadow-md fixed top-0 left-0 w-full z-50 opacity-97">
+        <div className="navbar fixed top-0 left-0 w-full z-50 bg-white/60 dark:bg-gray-900/60 backdrop-blur-md border-b border-white/20 shadow-md">
             <div className="navbar-start">
                 {/* Logo Section */}
                 <div className="dropdown">

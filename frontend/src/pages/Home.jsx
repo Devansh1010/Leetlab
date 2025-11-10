@@ -7,6 +7,7 @@ import useStore from '../store/store.js'
 import { Code2, Layers, Terminal, Trophy } from "lucide-react";
 import useSheetStore from "../store/sheetStore.js";
 import SheetCard from "../components/sheet/SheetCard.jsx";
+import { Link } from "react-router-dom";
 
 
 const Home = () => {
@@ -14,7 +15,7 @@ const Home = () => {
   const isGettingProblems = useProblemStore((state) => state.isGettingProblems);
   const problems = useProblemStore((state) => state.problems);
 
-  const { sheet, isGettingSheet, getSheets } = useSheetStore()
+  const { sheets, isGettingSheet, getSheets } = useSheetStore()
 
   const [error, setError] = useState("");
 
@@ -59,10 +60,16 @@ const Home = () => {
   return (
     <div>
       <section className="relative bg-linear-to-b from-base-100 via-base-200 to-base-300 min-h-screen flex items-center justify-center overflow-hidden">
-        {sheet && sheet.map((s, index) => (
-          <SheetCard key={s.id || index} title={s.title} description={s.description} id={s.id} />
-        ))
-        }
+        <div className="flex gap-2">
+
+          {sheets && sheets.map((s, index) => (
+            <Link to={`/sheet/${s.id}`}>
+              <SheetCard key={s.id || index} title={s.title} description={s.description} id={s.id} />
+            </Link>
+          ))
+          }
+
+        </div>
 
       </section>
 

@@ -84,13 +84,16 @@ export const getSheetById = async (req, res) => {
         const sheet = await db.sheet.findUnique({
             where: {
                 id: sheetId,
-                userId: userId
             },
             include: {
                 problems: {
-                    include: {
-                        problem: true
-                    }
+                    select: {
+                        id: true,
+                        title: true,
+                        description: true,
+                        tags: true,
+                        difficulty: true,
+                    },
                 }
             }
         });
