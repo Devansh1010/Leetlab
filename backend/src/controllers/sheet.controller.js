@@ -1,3 +1,4 @@
+import { title } from 'process';
 import { db } from '../libs/db.js'
 
 
@@ -9,14 +10,15 @@ export const getAllSheets = async (req, res) => {
         }
 
         const sheets = await db.sheet.findMany({
-            where: {
-                userId: userId
-            },
             include: {
                 problems: {
-                    include: {
-                        problem: true
-                    }
+                    select: {
+                        id: true,
+                        title: true,
+                        description: true,
+                        tags: true,
+                        difficulty: true,
+                    },
                 }
             }
         });
@@ -105,7 +107,7 @@ export const getSheetById = async (req, res) => {
     }
 }
 
-export const updatePlaylist = async (req, res) => {
+export const updateSheet = async (req, res) => {
     try {
         const { sheetId } = req.params;
         const { title, description } = req.body;
@@ -140,7 +142,7 @@ export const updatePlaylist = async (req, res) => {
     }
 }
 
-export const deletePlaylist = async (req, res) => {
+export const deleteSheet = async (req, res) => {
     try {
         const { sheetId } = req.params;
         const userId = req.user.id;

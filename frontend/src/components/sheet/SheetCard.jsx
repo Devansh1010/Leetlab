@@ -1,6 +1,6 @@
 
 
-const SheetCard = ({image, title, description, btnTitle="Explore Now"}) => {
+const SheetCard = ({image, title, description, btnTitle="Explore Now", id}) => {
     return (
         <div className="card bg-base-100 image-full w-96 shadow-sm">
             <figure>

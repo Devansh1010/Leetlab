@@ -80,8 +80,8 @@ const Navbar = () => {
                         </ul>
                     </div>
 
-                    <div className='flex gap-3 justify-center items-center'>
-                        {authUser?.role === "USER" && <div><Code2Icon />
+                    <div className='flex gap-2 justify-center items-center'>
+                        {authUser?.role === "USER" && <div className='flex gap-2'><Code2Icon />
 
                             <h2>{streakCount}</h2></div>}
 
