@@ -234,3 +234,24 @@ export const checkDailyStreak = async (req, res) => {
         return res.status(500).json({ error: "Internal Server Error" });
     }
 };
+
+export const getUserCount = async (req, res) =>{
+    try {
+        const user = req.user
+
+        if(!user && user.role !== UserRole.ADMIN){
+            return res.status(403).json({ status: 403, message: "Access Denied!😒" })
+        }
+
+        const count = await db.user.count()
+
+        return res.status(200).json({
+            status: 200,
+            message: "User count fetched Successfully😊",
+            userCount: count
+        })
+
+    } catch (error) {
+        
+    }
+}

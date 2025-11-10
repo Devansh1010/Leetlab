@@ -25,9 +25,6 @@ const Navbar = () => {
             </div>
             <div className="navbar-center hidden lg:flex">
                 <ul className="menu menu-horizontal px-1">
-                    {
-                        authUser?.role === "ADMIN" && <li className='text-#0f172a text-lg'><Link to={'/'}>Dashboard</Link></li>
-                    }
                     <li className='text-#0f172a text-lg'><Link to={'/'}>Problems</Link></li>
                     <li className='text-#0f172a text-lg'><Link to={'/leaderboard'}>Leaderboard</Link></li>
                     <li className='text-#0f172a text-lg'><Link to={'/playlist'}>Playlists</Link></li>

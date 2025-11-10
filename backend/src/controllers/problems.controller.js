@@ -98,6 +98,19 @@ export const getAllProblems = async (req, res) => {
         return res.status(500).json({ status: 500, message: "Internal server error" })
     }
 }
+export const getProblemCount = async (req, res) => {
+    try {
+        const problemCount = await db.problem.count()
+        
+        return res.status(200).json({
+            status: 200,
+            problemCount
+        })
+    } catch (error) {
+        console.error("Error fetching problems:", error)
+        return res.status(500).json({ status: 500, message: "Internal server error" })
+    }
+}
 
 export const getProblemById = async (req, res) => {
     try {

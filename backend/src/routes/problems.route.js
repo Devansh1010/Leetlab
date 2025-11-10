@@ -4,7 +4,7 @@ import { adminMiddleware, authMiddleware } from '../middleware/auth.middleware.j
 
 dotenv.config();
 
-import { createProblem, deleteProblem, getAllProblems, getProblemById, solvedProblemsByUser, updateProblem } from '../controllers/problems.controller.js';
+import { createProblem, deleteProblem, getAllProblems, getProblemById, getProblemCount, solvedProblemsByUser, updateProblem } from '../controllers/problems.controller.js';
 const problemsRoute = express.Router();
 
 problemsRoute.post('/createProblem', authMiddleware, adminMiddleware, createProblem)
@@ -14,6 +14,7 @@ problemsRoute.put('/updateProblem/:problemId', authMiddleware, adminMiddleware, 
 problemsRoute.delete('/deleteProblem/:problemId', authMiddleware, adminMiddleware, deleteProblem)
 
 problemsRoute.get('/solvedProblems', authMiddleware, solvedProblemsByUser)
+problemsRoute.get('/getProblemCount', authMiddleware, getProblemCount)
 
 
 export default problemsRoute;  

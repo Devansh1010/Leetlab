@@ -6,6 +6,8 @@ const useStore = create((set) => ({
     isSigningUp: false,
     isSigningIn: false,
     isCheckingAuth: false,
+    gettingCount : false,
+    userCount: 0,
 
 
     checkAuth: async () => {
@@ -18,6 +20,19 @@ const useStore = create((set) => ({
             console.error("Error checking auth:", error);
         } finally {
             set({ isCheckingAuth: false });
+        }
+    },
+
+    getUserCount: async () => {
+        set({ gettingCount: true });
+        try {
+            const response = await axiosInstance.get('/auth/getUserCount');
+            set({ userCount: response.data.userCount })
+        } catch (error) {
+            set({ userCount: -1 })
+            console.error("Error checking auth:", error);
+        } finally {
+            set({ gettingCount: false });
         }
     },
 
