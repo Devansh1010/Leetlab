@@ -1,8 +1,11 @@
 import React from 'react'
+import Playlists from '../components/playlist/Playlists'
 
 const Playlist = () => {
   return (
-    <div>Playlist</div>
+    <div className='min-h-screen'>
+      <Playlists />
+    </div>
   )
 }
 

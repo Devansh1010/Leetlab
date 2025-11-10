@@ -9,6 +9,7 @@ import problemsRoute from './routes/problems.route.js';
 import executeCodeRoute from './routes/executeCode.route.js';
 import submissionRoute from './routes/submission.route.js';
 import sheetRoute from './routes/sheet.route.js';
+import playlistRoute from './routes/playlist.route.js';
 
 
 dotenv.config()
@@ -35,6 +36,7 @@ app.use('/api/v1/problems', problemsRoute)
 app.use('/api/v1/execute-code', executeCodeRoute)
 app.use('/api/v1/submission', submissionRoute)
 app.use('/api/v1/sheets', sheetRoute)
+app.use('/api/v1/playlists', playlistRoute)
 
 app.listen(port, (req, res)=> {
     console.log('Server is running on port: ', port)

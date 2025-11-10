@@ -59,108 +59,132 @@ const Home = () => {
 
   return (
     <div>
-      <section className="relative bg-linear-to-b from-base-100 via-base-200 to-base-300 min-h-screen flex items-center justify-center overflow-hidden">
-        <div className="flex gap-2">
+      <section className="relative  min-h-screen flex items-center justify-center overflow-hidden">
+        <div className="pt-20 px-6 pb-10 min-h-screen">
+          {/* Header Section */}
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-white">Your Study Collections</h2>
+          </div>
 
-          {sheets && sheets.map((s, index) => (
-            <Link to={`/sheet/${s.id}`}>
-              <SheetCard key={s.id || index} title={s.title} description={s.description} id={s.id} />
-            </Link>
-          ))
-          }
-
+          {/* Sheets Grid */}
+          {sheets && sheets.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {sheets.map((s, index) => (
+                <Link key={s.id || index} to={`/sheet/${s.id}`}>
+                  <SheetCard
+                    title={s.title}
+                    description={s.description}
+                    id={s.id}
+                  />
+                </Link>
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col justify-center items-center gap-4 text-gray-500 dark:text-gray-400 mt-20">
+              <h3 className="text-lg font-medium">No Sheets Available</h3>
+            </div>
+          )}
         </div>
+
 
       </section>
 
       {/* Problems Section */}
-      <div className="p-6 max-w-6xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-primary flex items-center gap-2">
-            🧩 All Problems
-          </h2>
-          <span className="badge badge-primary text-white px-3 py-2 text-sm">
-            {problems.length} Total
-          </span>
-        </div>
+      <section className="min-h-screen px-6 py-20 bg-transparent text-gray-800 dark:text-gray-100">
+        <div className="max-w-6xl mx-auto">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-3xl font-extrabold flex items-center gap-2 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+              🧩 All Problems
+            </h2>
+            <span className="rounded-full bg-gradient-to-r from-primary to-secondary text-white px-4 py-1.5 text-sm font-semibold shadow-md">
+              {problems.length} Total
+            </span>
+          </div>
 
-        {problems.length > 0 ? (
-          <div className="overflow-x-auto rounded-2xl shadow-sm">
-            <table className="w-full border-collapse">
-              {/* Table Header */}
-              <thead>
-                <tr className="bg-primary text-white text-left">
-                  <th className="p-4 w-12"></th>
-                  <th className="p-4 w-16">#</th>
-                  <th className="p-4">Title</th>
-                  <th className="p-4">Description</th>
-                  <th className="p-4">Tags</th>
-                  <th className="p-4 text-right w-24">Action</th>
-                </tr>
-              </thead>
-
-              {/* Table Body */}
-              <tbody>
-                {problems.map((problem, index) => (
-                  <tr
-                    key={problem.id || index}
-                    className={`transition-colors duration-200 ${index % 2 === 0
-                      ? "bg-gray-50 hover:bg-gray-100"
-                      : "bg-gray-100 hover:bg-gray-200"
-                      }`}
-                  >
-                    {/* ✅ Solved Checkbox */}
-                    <td className="p-4 text-center">
-                      <input
-                        type="checkbox"
-                        className="checkbox checkbox-sm"
-                        checked={problem.isSolved}
-                        readOnly
-                      />
-                    </td>
-
-                    {/* Index */}
-                    <td className="p-4 font-semibold text-gray-600">{index + 1}</td>
-
-                    {/* Title */}
-                    <td className="p-4 font-medium text-gray-800">{problem.title}</td>
-
-                    {/* Description */}
-                    <td className="p-4 text-gray-600 text-sm line-clamp-2">
-                      {problem.description || "No description available."}
-                    </td>
-
-                    {/* Tags */}
-                    <td className="p-4">
-                      <div className="flex flex-wrap gap-2">
-                        {problem.tags?.map((tag, i) => (
-                          <span
-                            key={i}
-                            className="badge badge-outline badge-info text-xs uppercase tracking-wide"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                    </td>
-
-                    {/* Solve Button */}
-                    <td className="p-4 text-right">
-                      <button className="btn btn-xs btn-outline btn-primary rounded-full text-xs">
-                        Solve
-                      </button>
-                    </td>
+          {/* Problems Table */}
+          {problems.length > 0 ? (
+            <div className="overflow-x-auto rounded-2xl border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-800/60 backdrop-blur-md shadow-lg transition-all duration-300">
+              <table className="w-full border-collapse">
+                {/* Table Header */}
+                <thead>
+                  <tr className="bg-gradient-to-r from-primary to-secondary text-white text-left">
+                    <th className="p-4 w-12"></th>
+                    <th className="p-4 w-16">#</th>
+                    <th className="p-4">Title</th>
+                    <th className="p-4">Description</th>
+                    <th className="p-4">Tags</th>
+                    <th className="p-4 text-right w-24">Action</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        ) : (
-          <div className="text-center text-gray-500 py-12">
-            <p className="text-lg">No problems found.</p>
-          </div>
-        )}
-      </div>
+                </thead>
+
+                {/* Table Body */}
+                <tbody>
+                  {problems.map((problem, index) => (
+                    <tr
+                      key={problem.id || index}
+                      className={`transition-colors duration-200 ${index % 2 === 0
+                          ? "bg-gray-50/60 dark:bg-gray-800/40 hover:bg-gray-100/70 dark:hover:bg-gray-700/60"
+                          : "bg-gray-100/60 dark:bg-gray-800/50 hover:bg-gray-200/70 dark:hover:bg-gray-700/70"
+                        }`}
+                    >
+                      {/* ✅ Solved Checkbox */}
+                      <td className="p-4 text-center">
+                        <input
+                          type="checkbox"
+                          className="checkbox checkbox-sm checkbox-primary"
+                          checked={problem.isSolved}
+                          readOnly
+                        />
+                      </td>
+
+                      {/* Index */}
+                      <td className="p-4 font-semibold text-gray-600 dark:text-gray-300">
+                        {index + 1}
+                      </td>
+
+                      {/* Title */}
+                      <td className="p-4 font-medium text-gray-800 dark:text-gray-100">
+                        {problem.title}
+                      </td>
+
+                      {/* Description */}
+                      <td className="p-4 text-gray-600 dark:text-gray-400 text-sm line-clamp-2">
+                        {problem.description || "No description available."}
+                      </td>
+
+                      {/* Tags */}
+                      <td className="p-4">
+                        <div className="flex flex-wrap gap-2">
+                          {problem.tags?.map((tag, i) => (
+                            <span
+                              key={i}
+                              className="rounded-full border border-primary/30 text-primary dark:text-secondary text-xs font-medium px-2 py-0.5 bg-primary/5 dark:bg-secondary/10"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      </td>
+
+                      {/* Solve Button */}
+                      <td className="p-4 text-right">
+                        <button className="btn btn-xs rounded-full bg-gradient-to-r from-primary to-secondary text-white hover:scale-105 transition-transform duration-200 shadow-md">
+                          Solve
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="text-center text-gray-500 py-12">
+              <p className="text-lg">No problems found.</p>
+            </div>
+          )}
+        </div>
+      </section>
 
 
     </div>

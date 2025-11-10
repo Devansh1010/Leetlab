@@ -15,6 +15,8 @@ import Price from './pages/Price'
 import Leaderboard from './pages/Leaderboard'
 import AdminLayout from './components/layout/AdminLayout'
 import SheetDetails from './pages/SheetDetails'
+import CreatePlaylist from './components/playlist/CreatePlaylist'
+
 
 
 const App = () => {
@@ -60,7 +62,8 @@ const App = () => {
         <Route path="leaderboard" element={authUser ? <Leaderboard /> : <Navigate to="/login" />} />
         <Route path="playlist" element={authUser ? <Playlist /> : <Navigate to="/login" />} />
         <Route path="pricing" element={authUser ? <Price /> : <Navigate to="/login" />} />
-        <Route path="sheet/:id" element={<SheetDetails />} /> 
+        <Route path="sheet/:id" element={<SheetDetails />} />
+        <Route path="create-playlist" element={authUser ? <CreatePlaylist /> : <Navigate to="/login" />} />
       </Route>
 
       {/* AUTH ROUTES */}
