@@ -59,3 +59,9 @@ export const problemSchema = z.object({
     JAVA: z.string().min(1, "Java solution is required"),
   }),
 });
+
+export const createSheetSchema = z.object({
+  title: z.string().min(3, "Title must be at least 3 characters"),
+  description: z.string().min(10, "Description must be at least 10 characters"),
+  problems: z.array(z.string()).min(1, "At least one problem must be selected"),
+});

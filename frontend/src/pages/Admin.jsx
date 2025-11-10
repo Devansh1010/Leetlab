@@ -1,27 +1,52 @@
 import React from 'react'
 import AddProblem from './AddProblem'
 import { Link } from 'react-router-dom'
-import  useStore  from '../store/store.js'
+import useStore from '../store/store.js'
 import Button from '../components/button/Button.jsx'
+import { Code2, Layers, Terminal, Trophy } from "lucide-react";
 
 const Admin = () => {
-    const user = useStore()
-    console.log(user)
+    const {authUser} = useStore()
+   
     return (
-        <div data-theme='light'>
-            <div className="hero bg-[#0d1117] min-h-screen">
-                <div className="hero-content text-center">
-                    <div className="max-w-md">
-                        <h1 className="text-5xl font-bold text-[#c9d1d9] ">Hello, {user.authUser.name}</h1>
-                        <p className="py-6 text-[#8b949e]">
-                            Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem
-                            quasi. In deleniti eaque aut repudiandae et a id nisi.
-                        </p>
-                        <Link to={'/admin/add-problem'}><Button content={"Add Problem"} className={'bg-[#238636] hover:bg-[#2ea043]'}/> </Link>
-                        <Link to={'/admin/add-sheet'}><Button content={'Add Sheet'} className={'bg-[#1f6feb] hover:bg-[#388bfd]'}/> </Link>
+        <div>
+            <section className="relative bg-linear-to-b from-base-100 via-base-200 to-base-300 min-h-screen flex items-center justify-center overflow-hidden">
+
+                {/* Decorative background icons */}
+                <div className="absolute inset-0 opacity-5 pointer-events-none">
+                    <div className="absolute top-16 left-24">
+                        <Code2 className="w-28 h-28 text-primary" />
+                    </div>
+                    <div className="absolute bottom-20 right-28">
+                        <Layers className="w-24 h-24 text-secondary" />
+                    </div>
+                    <div className="absolute top-32 right-1/3">
+                        <Terminal className="w-20 h-20 text-accent" />
                     </div>
                 </div>
-            </div>
+
+                {/* Hero content */}
+                <div className="relative hero-content text-center z-10">
+                    <div className="max-w-xl space-y-6">
+                        {/* Heading */}
+                        <h1 className="text-5xl font-extrabold text-secondary">
+                            Welcome back,{" "}
+                            <span className="text-primary">{authUser?.name || "Coder"}</span> 👋
+                        </h1>
+
+                      
+
+                        {/* Buttons */}
+                        <div className="flex items-center justify-center gap-4 mt-8">
+                            <Link to={'/admin/add-problem'}><Button content={"Add Problem"} className={'bg-[#238636] hover:bg-[#2ea043]'} /> </Link>
+                            <Link to={'/admin/add-sheet'}><Button content={'Add Sheet'} className={'bg-[#1f6feb] hover:bg-[#388bfd]'} /> </Link>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Light overlay gradient for focus */}
+                <div className="absolute inset-0 bg-linear-to-t from-base-300/40 via-transparent to-transparent pointer-events-none" />
+            </section>
 
         </div>
 

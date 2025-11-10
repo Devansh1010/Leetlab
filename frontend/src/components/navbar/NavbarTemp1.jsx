@@ -81,9 +81,9 @@ const Navbar = () => {
                     </div>
 
                     <div className='flex gap-3 justify-center items-center'>
-                        <Code2Icon />
+                        {authUser?.role === "USER" && <div><Code2Icon />
 
-                        <h2>{streakCount}</h2>
+                            <h2>{streakCount}</h2></div>}
 
                         <LogoutButton className="hover:text-white cursor-pointer btn btn-ghost rounded-btn">
                             <LogOut className="w-4 h-4 mr-2" />

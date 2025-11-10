@@ -2,7 +2,7 @@ import React from 'react'
 
 const Price = () => {
   return (
-    <div className='flex justify-center items-center'>
+    <div className='flex justify-center items-center min-h-screen bg-base-200 p-4'>
       <div className="card w-96 bg-base-100 shadow-sm">
         <div className="card-body">
           <span className="badge badge-xs badge-warning">Most Popular</span>

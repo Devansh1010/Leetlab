@@ -48,7 +48,9 @@ export const createSheet = async (req, res) => {
             data: {
                 title,
                 description,
-                problems
+                problems: {
+                    connect: problems.map((p) => ({ id: p.id })),
+                },
             }
         });
 
@@ -243,8 +245,8 @@ export const removeProblemToSheet = async (req, res) => {
             return res.status(404).json({ message: "Sheet not found" });
         }
 
-       //Can be avoid
-       
+        //Can be avoid
+
         // const problem = await db.problem.findMany({
         //     where: {
         //         id: problemIds.map(id => id)
