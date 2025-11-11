@@ -1,5 +1,6 @@
 import { BookOpen, FileText, ArrowRight } from "lucide-react";
 
+
 const SheetCard = ({ image, title, description, btnTitle = "Explore Now", id }) => {
     return (
         <div className="group relative w-96 rounded-2xl overflow-hidden border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-800/60 backdrop-blur-md shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-500">
@@ -36,15 +37,15 @@ const SheetCard = ({ image, title, description, btnTitle = "Explore Now", id }) 
 
                 {/* Button */}
                 <div className="pt-2">
-                    <button className="relative w-full inline-flex items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-primary/90 to-secondary/90 px-5 py-2.5 font-semibold text-white shadow-md transition-all duration-300 hover:scale-[1.03] hover:shadow-lg focus:outline-none">
-                        <span className="relative z-10 flex items-center gap-2">
-                            {btnTitle}
-                            <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
-                        </span>
+                        <button className="relative w-full inline-flex items-center justify-center gap-2 overflow-hidden rounded-xl bg-gradient-to-r from-primary/90 to-secondary/90 px-5 py-2.5 font-semibold text-white shadow-md transition-all duration-300 hover:scale-[1.03] hover:shadow-lg focus:outline-none">
+                            <span className="relative z-10 flex items-center gap-2">
+                                {btnTitle}
+                                <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+                            </span>
 
-                        {/* Soft Glow */}
-                        <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
-                    </button>
+                            {/* Soft Glow */}
+                            <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
+                        </button>
                 </div>
             </div>
         </div>

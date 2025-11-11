@@ -167,7 +167,6 @@ export const me = async (req, res) => {
 }
 
 
-
 function startOfUTCDate(d) {
     const dt = new Date(d);
     return Date.UTC(dt.getUTCFullYear(), dt.getUTCMonth(), dt.getUTCDate());

@@ -6,16 +6,15 @@ import Register from './pages/Register'
 import useStore from './store/store'
 import { Loader2 } from 'lucide-react'
 import Layout from './components/layout/Layout'
-import AddProblem from './pages/AddProblem'
-import AddSheet from './pages/AddSheet'
-import AdminRoute from './components/layout/AdminRoute'
-import Admin from './pages/Admin'
+
 import Playlist from './pages/Playlist'
 import Price from './pages/Price'
 import Leaderboard from './pages/Leaderboard'
-import AdminLayout from './components/layout/AdminLayout'
 import SheetDetails from './pages/SheetDetails'
 import CreatePlaylist from './components/playlist/CreatePlaylist'
+import ProblemDetailPage from './pages/ProblemDetailPage'
+import TodayChallange from './components/home/TodayChallange'
+
 
 
 
@@ -26,6 +25,8 @@ const App = () => {
     checkAuth()
   }, [checkAuth])
 
+  console.log('Auth User:', authUser);
+
   if (isCheckingAuth && !authUser) {
     return <div className='flex items-center justify-center h-screen'>
       <Loader2 className='size-10 animate-spin' />
@@ -35,34 +36,19 @@ const App = () => {
   return (
     <Routes>
 
-      {/* ADMIN ROUTES */}
-      <Route element={<AdminRoute />}>
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<Admin />} />
-          <Route path="add-problem" element={<AddProblem />} />
-          <Route path="add-sheet" element={<AddSheet />} />
-        </Route>
-      </Route>
-
       {/* USER ROUTES */}
       <Route path="/" element={<Layout />}>
         <Route
           index
-          element={
-            !authUser ? (
-              <Navigate to="/login" />
-            ) : authUser.role === "ADMIN" ? (
-              <Navigate to="/admin" />
-            ) : (
-              <Home />
-            )
-          }
+          element={!authUser ? (<Navigate to="/login" />) : (<Home />)}
         />
 
         <Route path="leaderboard" element={authUser ? <Leaderboard /> : <Navigate to="/login" />} />
         <Route path="playlist" element={authUser ? <Playlist /> : <Navigate to="/login" />} />
         <Route path="pricing" element={authUser ? <Price /> : <Navigate to="/login" />} />
-        <Route path="sheet/:id" element={<SheetDetails />} />
+        <Route path="sheet/:sheetId" element={<SheetDetails />} />
+        <Route path="problem/:problemId" element={<ProblemDetailPage />} />
+        <Route path="today-challange" element={<TodayChallange />} />
         <Route path="create-playlist" element={authUser ? <CreatePlaylist /> : <Navigate to="/login" />} />
       </Route>
 

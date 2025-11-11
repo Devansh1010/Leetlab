@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Loader2, BookOpen, ListChecks, Star } from "lucide-react";
 import useSheetStore from "../store/sheetStore";
 
@@ -10,12 +10,12 @@ const difficultyColors = {
 };
 
 const SheetDetails = () => {
-  const { id } = useParams();
+  const { sheetId } = useParams();
   const { sheet, isGettingSheet, getSheetById } = useSheetStore();
 
   useEffect(() => {
-    getSheetById(id);
-  }, [id]);
+    getSheetById(sheetId);
+  }, [sheetId]);
 
   if (isGettingSheet) {
     return (
@@ -55,47 +55,50 @@ const SheetDetails = () => {
       {/* Problem List */}
       <div className="grid gap-4">
         {sheet.problems?.length > 0 ? (
-          sheet.problems.map((problem) => (
-            <div
-              key={problem.id}
-              className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-base-100 dark:bg-base-300 border border-base-300 rounded-xl p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300"
-            >
-              <div className="flex flex-col gap-1">
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
-                  <Star className="w-4 h-4 text-primary" />
-                  {problem.title}
-                </h2>
-                <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
-                  {problem.description}
-                </p>
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {problem.tags?.map((tag, index) => (
-                    <span
-                      key={index}
-                      className="text-xs font-medium px-2 py-1 rounded-full bg-base-200 dark:bg-base-100 text-gray-700 dark:text-gray-300"
-                    >
-                      #{tag}
-                    </span>
-                  ))}
+          sheet.problems.map((problem, index) => (
+            <Link  key={problem.id || index} to={`/problem/${problem.id}`}>
+              
+              <div
+                className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-base-100 dark:bg-base-300 border border-base-300 rounded-xl p-4 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300"
+              >
+                <div className="flex flex-col gap-1">
+                  <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
+                    <Star className="w-4 h-4 text-primary" />
+                    {problem.title}
+                  </h2>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
+                    {problem.description}
+                  </p>
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {problem.tags?.map((tag, index) => (
+                      <span
+                        key={index}
+                        className="text-xs font-medium px-2 py-1 rounded-full bg-base-200 dark:bg-base-100 text-gray-700 dark:text-gray-300"
+                      >
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+
+                {/* Difficulty Badge */}
+                < div
+                  className={`mt-3 sm:mt-0 text-xs sm:text-sm font-semibold px-3 py-1 rounded-full ${difficultyColors[problem.difficulty] || "bg-gray-200 text-gray-700"
+                    }`}
+                >
+                  {problem.difficulty}
                 </div>
               </div>
-
-              {/* Difficulty Badge */}
-              <div
-                className={`mt-3 sm:mt-0 text-xs sm:text-sm font-semibold px-3 py-1 rounded-full ${difficultyColors[problem.difficulty] || "bg-gray-200 text-gray-700"
-                  }`}
-              >
-                {problem.difficulty}
-              </div>
-            </div>
+            </Link>
           ))
         ) : (
           <div className="text-center py-20 text-gray-500 dark:text-gray-400">
             No problems added to this sheet yet.
           </div>
         )}
-      </div>
-    </div>
+      </div >
+    </div >
   );
 };
 

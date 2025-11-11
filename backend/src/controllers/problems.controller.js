@@ -4,7 +4,7 @@ import { getAllLanguages, poolBathResults, submitBatch } from '../libs/judge0.ut
 
 export const createProblem = async (req, res) => {
     try {
-        const { title, description, difficulty, tags, example, contraints, testcases, codeSnippets, referenceSolutions, hints, editorial } = req.body
+        const { title, description, difficulty, tags, examples, constraints, testcases, codeSnippets, referenceSolutions, hints, editorial } = req.body
 
 
         if (!title || !description || !difficulty || !testcases || !referenceSolutions || !codeSnippets) {
@@ -51,10 +51,6 @@ export const createProblem = async (req, res) => {
             }
         }
 
-
-        console.log(example)
-
-
         const newProblem = await db.problem.create({
             data: {
                 title,
@@ -62,8 +58,8 @@ export const createProblem = async (req, res) => {
                 tags,
                 difficulty,
                 userId: req.user.id,
-                example : {},
-                contraints : "",
+                example : examples,
+                contraints : constraints,
                 hints,
                 editorial,
                 testcases,
@@ -72,7 +68,6 @@ export const createProblem = async (req, res) => {
             }
         })
 
-        console.log("New Problem Created:", newProblem) 
         return res.status(201).json({
             status: 201,
             message: "Problem created successfully!",
@@ -116,6 +111,7 @@ export const getProblemById = async (req, res) => {
     try {
         const { problemId } = req.params
 
+        console.log("Fetching problem with ID:", problemId)
         if (!problemId) {
             return res.status(400).json({ status: 400, message: "Problem ID is required!" })
         }

@@ -46,6 +46,7 @@ const useProblemStore = create(set => ({
             const res = await axiosInstance.get(`/problems/getProblem/${problemId}`)
 
             set({ problem: res.data.problem })
+            console.log(res.data.problem)
         } catch (error) {
             console.log("Error while getting problem in store", error)
         } finally {

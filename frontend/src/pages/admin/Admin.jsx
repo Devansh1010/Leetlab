@@ -1,8 +1,8 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { ShieldCheck, Users, Code, Activity, Loader2 } from "lucide-react";
-import useStore from "../store/store";
-import useProblemStore from "../store/problemStore";
+import useStore from "../../../../frontend/src/store/store";
+import useProblemStore from "../../../../frontend/src/store/problemStore";
 
 const Admin = () => {
   const { authUser, getUserCount, userCount, gettingCount } = useStore();

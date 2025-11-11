@@ -2,16 +2,16 @@
 import { Link } from 'react-router-dom'
 import useStore from '../../store/store.js'
 import LogoutButton from '../logoutButton/LogoutButton.jsx'
-import { Code2Icon, LogOut, User } from 'lucide-react'
+import { Code2Icon, LogOut, Swords, User } from 'lucide-react'
 
 const Navbar = () => {
     const { authUser } = useStore()
     console.log("Auth User in Navbar:", authUser);
     const streakCount = authUser?.streakCount || 0;
-    const longestStreak = authUser?.longestStreak || 0;
+    const lastLoginDate = authUser?.lastLoginDate || null;
 
     return (
-        <div className="navbar fixed top-0 left-0 w-full z-50 bg-white/60 dark:bg-gray-900/60 backdrop-blur-md border-b border-white/20 shadow-md">
+        <div className="navbar sticky top-0 left-0 w-full z-50 bg-white/60 dark:bg-gray-900/60 backdrop-blur-md border-b border-white/20 shadow-md">
             <div className="navbar-start">
                 {/* Logo Section */}
                 <div className="dropdown">
@@ -78,6 +78,10 @@ const Navbar = () => {
                     </div>
 
                     <div className='flex gap-2 justify-center items-center'>
+                        <Link to={`/today-challange`} className='hover:text-white cursor-pointer btn btn-ghost rounded-btn'>
+                            <Swords />
+                        </Link>
+
                         {authUser?.role === "USER" && <div className='flex gap-2'><Code2Icon />
 
                             <h2>{streakCount}</h2></div>}

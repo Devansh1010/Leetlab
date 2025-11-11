@@ -6,7 +6,6 @@ dotenv.config()
 
 export const authMiddleware = async (req, res, next) => {
     try {
-        
         const token = await req.cookies.jwt;
 
         if (!token) {
@@ -15,9 +14,13 @@ export const authMiddleware = async (req, res, next) => {
 
         let decodedToken;
         try {
+
             decodedToken = jwt.verify(token, process.env.JWT_SERECT)
+
         } catch (err) {
+
             return res.status(401).json({ status: 401, message: 'Invalid token' })
+
         }
 
         const user = await db.user.findUnique({
@@ -31,7 +34,19 @@ export const authMiddleware = async (req, res, next) => {
                 role: true,
                 image: true,
                 streakCount: true,
-                longestStreak: true
+                longestStreak: true,
+                problemsSolved: true,
+                lastLoginDate: true
+            },
+            
+        })
+
+        await db.user.update({
+            where: {
+                id: decodedToken.id
+            },
+            data: {
+                lastLoginDate: new Date()
             }
         })
 
