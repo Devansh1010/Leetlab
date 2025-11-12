@@ -27,6 +27,8 @@ export const getSubmissionForProblem = async (req, res) => {
 
         const { problemId } = req.params;
 
+        console.log("Reached at Submission")
+
         const submissions = await db.submission.findMany({
             where: {
                 userId: userId,

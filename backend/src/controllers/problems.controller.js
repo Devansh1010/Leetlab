@@ -111,7 +111,6 @@ export const getProblemById = async (req, res) => {
     try {
         const { problemId } = req.params
 
-        console.log("Fetching problem with ID:", problemId)
         if (!problemId) {
             return res.status(400).json({ status: 400, message: "Problem ID is required!" })
         }

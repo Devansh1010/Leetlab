@@ -4,9 +4,9 @@ import { authMiddleware } from '../middleware/auth.middleware.js';
 
 const submissionRoute = express.Router();
 
-submissionRoute.post('/get-all-submission', authMiddleware, getAllSubmissions);
-submissionRoute.post('/get-submission/:problemId',authMiddleware, getSubmissionForProblem);
-submissionRoute.post('/get-submissions-count/:problemId', getSubmissionCount);
+submissionRoute.get('/get-all-submission', authMiddleware, getAllSubmissions);
+submissionRoute.get('/get-submission/:problemId',authMiddleware, getSubmissionForProblem);
+submissionRoute.get('/get-submissions-count/:problemId', getSubmissionCount);
 
 
 export default submissionRoute;
