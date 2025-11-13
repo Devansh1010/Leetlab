@@ -65,3 +65,22 @@ export const createSheetSchema = z.object({
   description: z.string().min(10, "Description must be at least 10 characters"),
   problems: z.array(z.string()).min(1, "At least one problem must be selected"),
 });
+
+export const submissionSchema = z.object({
+  source_code: z
+    .string()
+    .min(1, "Source code cannot be empty"),
+  language_id: z
+    .number()
+    .int()
+    .positive("Invalid language id"),
+  stdin: z
+    .array(z.string().min(1, "Input cannot be empty"))
+    .nonempty("At least one input is required"),
+  expected_output: z
+    .array(z.string().min(1, "Output cannot be empty"))
+    .nonempty("At least one output is required"),
+  problem_id: z
+    .string()
+    .min(1, "Problem ID is required"),
+});

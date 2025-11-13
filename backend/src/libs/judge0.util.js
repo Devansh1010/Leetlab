@@ -13,19 +13,19 @@ export const getAllLanguages = (language) => {
 
 export const submitBatch = async (submissions) => {
     const JUDGE0_API_URL = process.env.JUDGE0_API_URL
-    const {data} = await axios.post(`${JUDGE0_API_URL}/submissions/batch?base64_encoded=false`, {
+    const { data } = await axios.post(`${JUDGE0_API_URL}/submissions/batch?base64_encoded=false`, {
         submissions: submissions,
-    })  
+    })
 
-    return data;   
+    return data;
 }
 
 export const poolBathResults = async (tokens) => {
-    while(true) {
+    while (true) {
         const JUDGE0_API_URL = process.env.JUDGE0_API_URL
-        const {data} = await axios.get(`${JUDGE0_API_URL}/submissions/batch`, {
+        const { data } = await axios.get(`${JUDGE0_API_URL}/submissions/batch`, {
             params: {
-                tokens: tokens.join(','),   
+                tokens: tokens.join(','),
                 base64_encoded: false,
             }
         })
@@ -34,7 +34,7 @@ export const poolBathResults = async (tokens) => {
 
         const isAllCompleted = results.every((result) => result.status.id >= 3)
 
-        if(isAllCompleted) {
+        if (isAllCompleted) {
             return results;
         }
 
@@ -50,4 +50,13 @@ export const getLanguageById = (language_id) => {
     }
 
     return LanguageMap[language_id];
+}
+export const getIdByLanguage = (language) => {
+    const LanguageMap = {
+        "JAVASCRIPT": 63,
+        "PYTHON": 71,
+        "JAVA": 62
+    }
+
+    return LanguageMap[language];
 }

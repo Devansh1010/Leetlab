@@ -1,6 +1,6 @@
 
 import { authMiddleware } from '../middleware/auth.middleware.js'
-import express, {Router} from 'express'
+import {Router} from 'express'
 import { executeCode } from '../controllers/executeCode.controller.js';
 
 const executeCodeRoute = Router()

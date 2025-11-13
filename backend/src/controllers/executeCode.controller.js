@@ -1,17 +1,18 @@
 import { db } from '../libs/db.js'
-import { getLanguageById, poolBathResults, submitBatch } from '../libs/judge0.util.js';
+import { getIdByLanguage, getLanguageById, poolBathResults, submitBatch } from '../libs/judge0.util.js';
 
 export const executeCode = async (req, res) => {
     try {
-        const { source_code, language_id, stdin, expected_output, problem_id } = req.body;
+        const { source_code, language_id, stdin, expected_outputs, problem_id } = req.body;
 
         const userId = req.user.id;
+
 
         if (
             !Array.isArray(stdin) ||
             source_code.length === 0 ||
-            !Array.isArray(expected_output) ||
-            stdin.length !== expected_output.length
+            !Array.isArray(expected_outputs) ||
+            stdin.length !== expected_outputs.length
         ) {
             return res.status(400).json({ message: 'Invalid input' });
         }
@@ -30,29 +31,35 @@ export const executeCode = async (req, res) => {
 
         console.log('Final results:', results);
 
-        const detailedResult = results.map((result, index) => {
-            const isCorrect = result.stdout?.trim() === expected_output[index].trim();
-            result.isCorrect = isCorrect;
 
-            console.log(`Test case ${index + 1}: ${isCorrect ? 'Passed' : 'Failed'}`);
+
+        let allPassed = true;
+        const detailedResult = results.map((result, index) => {
+
+            const stdout = result.stdout?.trim();
+            const expected_output = expected_outputs[index]?.trim();
+            const passed = stdout === expected_output;
+
+            if (!passed) allPassed = false
+
+
 
             return {
                 id: req.user.id, //! Not Required
                 submissionId: result.token,
                 testCaseNo: index + 1,
                 input: stdin[index],
-                expectedOutput: expected_output[index],
+                expectedOutput: expected_output,
                 actualOutput: result.stdout,
                 status: result.status.description,
-                stderr: result.stderr,
-                passed: isCorrect,
-                compileOutput: result.compile_output,
-                memoryUsed: result.memory,
-                timeTaken: result.time,
+                stderr: result.stderr || null,
+                passed,
+                compileOutput: result.compile_output || null,
+                memoryUsed: result.memory ? `${result.memory} KB` : undefined,
+                timeTaken: result.time ? `${result.time} s` : undefined,
             }
         });
 
-        // console.log('Detailed Results:', detailedResult);
 
         //? For time caclulation we take the max time taken among all test cases insted of average
         const submission = await db.submission.create({
@@ -60,18 +67,29 @@ export const executeCode = async (req, res) => {
                 userId: userId,
                 problemId: problem_id,
                 language: getLanguageById(language_id),
+
                 sourceCode: source_code,
+
                 status: detailedResult.every(res => res.passed) ? 'Accepted' : 'Wrong Answer',
-                timeTaken: Math.max(...detailedResult.map(res => res.timeTaken || 0)).toString(),
-                memoryUsed: Math.max(...detailedResult.map(res => res.memoryUsed || 0)).toString(),
-                compileOutput: detailedResult.some(res => res.compileOutput) ? detailedResult.map(res => res.compileOutput).join('\n') : null,
-                stderr: detailedResult.some(res => res.stderr) ? detailedResult.map(res => res.stderr).join('\n') : null,
-                stdout: detailedResult.map(res => res.actualOutput).join(','),
-                stdInput: detailedResult.map(res => res.input).join(','),
+
+                timeTaken: detailedResult.some((r) => r.timeTaken)
+                    ? JSON.stringify(detailedResult.map((r) => r.timeTaken))
+                    : null,
+
+                memoryUsed: detailedResult.some((r) => r.memoryUsed)
+                    ? JSON.stringify(detailedResult.map((r) => r.memoryUsed))
+                    : null,
+
+                compileOutput: detailedResult.some(res => res.compileOutput) ? JSON.stringify(detailedResult.map(res => res.compileOutput)) : null,
+
+                stderr: detailedResult.some(res => res.stderr) ? JSON.stringify(detailedResult.map(res => res.stderr)) : null,
+
+                stdout: JSON.stringify(detailedResult.map(res => res.actualOutput)),
+
+                stdInput: JSON.stringify(detailedResult.map(res => res.input)),
             }
         })
 
-        const allPassed = detailedResult.every(res => res.passed);
         if (allPassed) {
             const solvedProblem = await db.problemSolved.upsert({
                 where: {
@@ -98,7 +116,7 @@ export const executeCode = async (req, res) => {
             status: res.status,
             stderr: res.stderr,
             compileOutput: res.compileOutput,
-            memoryUsed: res.memoryUsed.toString(),
+            memoryUsed: res.memoryUsed,
             timeTaken: res.timeTaken,
         }));
 
@@ -113,7 +131,7 @@ export const executeCode = async (req, res) => {
             }
         });
 
-        res.status(200).json({ Message: "Success", submission, submissionWithTestCases });
+        res.status(200).json({ Message: "Success", submission: submissionWithTestCases });
     } catch (error) {
         console.error('Error executing code:', error);
         return res.status(500).json({ message: 'Internal server error' });

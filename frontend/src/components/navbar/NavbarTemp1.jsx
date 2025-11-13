@@ -6,7 +6,6 @@ import { Code2Icon, LogOut, Swords, User } from 'lucide-react'
 
 const Navbar = () => {
     const { authUser } = useStore()
-    console.log("Auth User in Navbar:", authUser);
     const streakCount = authUser?.streakCount || 0;
     const lastLoginDate = authUser?.lastLoginDate || null;
 
