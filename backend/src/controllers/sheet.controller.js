@@ -2,6 +2,25 @@ import { title } from 'process';
 import { db } from '../libs/db.js'
 
 
+export const getSheetsCount = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        if (!userId) {
+            return res.status(401).json({ message: "Unauthorized" });
+        }
+
+        const sheetsCount = await db.sheet.count({
+        });
+
+        console.log("Fetched sheetsCount:", sheetsCount);
+        res.status(200).json({ message: "success", sheetsCount });
+
+    } catch (error) {
+
+        console.error("Error fetching sheets count:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
 export const getAllSheets = async (req, res) => {
     try {
         const userId = req.user.id;

@@ -1,4 +1,3 @@
-
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -21,7 +20,7 @@ import { useNavigate } from "react-router-dom";
 
 
 //Zod Validation
-import { problemSchema } from '../../utils/validation';
+import { problemSchema } from '../../utils/validation.js';
 
 
 
@@ -33,6 +32,7 @@ import { sampleStringProblem } from '../../utils/sampleData.js'
 
 
 const CreateProblemForm = () => {
+    
     const [sampleType, setSampleType] = useState("DP")
     const navigation = useNavigate();
 

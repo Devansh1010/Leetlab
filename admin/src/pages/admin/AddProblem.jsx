@@ -1,5 +1,5 @@
 
-import CreateProblemForm from '../../../../frontend/src/components/createProblem/CreateProblemForm'
+import CreateProblemForm from '../../components/problem/CreateProblemForm'
 
 const AddProblem = () => {
     return (
