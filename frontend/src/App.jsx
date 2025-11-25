@@ -14,6 +14,7 @@ import SheetDetails from './pages/SheetDetails'
 import CreatePlaylist from './components/playlist/CreatePlaylist'
 import ProblemDetailPage from './pages/ProblemDetailPage'
 import TodayChallange from './components/home/TodayChallange'
+import PlaylistDetail from './components/playlist/PlaylistDetail'
 
 
 
@@ -47,6 +48,7 @@ const App = () => {
         <Route path="playlist" element={authUser ? <Playlist /> : <Navigate to="/login" />} />
         <Route path="pricing" element={authUser ? <Price /> : <Navigate to="/login" />} />
         <Route path="sheet/:sheetId" element={<SheetDetails />} />
+        <Route path="playlist/:playlistId" element={<PlaylistDetail />} />
         <Route path="problem/:problemId" element={<ProblemDetailPage />} />
         <Route path="today-challange" element={<TodayChallange />} />
         <Route path="create-playlist" element={authUser ? <CreatePlaylist /> : <Navigate to="/login" />} />

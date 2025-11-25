@@ -30,22 +30,22 @@ const Problems = () => {
 
     return (
         <div>
-            <section className="relative py-20 bg-white/80 dark:bg-slate-800/40 backdrop-blur-md">
+            <section className="relative py-20 bg-[#161616] min-h-screen">
                 <div className="max-w-6xl mx-auto px-6">
                     <div className="flex items-center justify-between mb-10">
-                        <h2 className="text-3xl font-extrabold bg-linear-to-r from-indigo-500 to-cyan-400 bg-clip-text text-transparent flex items-center gap-2">
-                            ⚡ All Problems
+                        <h2 className="text-3xl font-extrabold  flex items-center gap-2">
+                             All Problems
                         </h2>
-                        <span className="rounded-full bg-linear-to-r from-indigo-500 to-cyan-500 text-white px-4 py-1.5 text-sm font-semibold shadow-md">
+                        <span className="rounded-full dark:bg-white dark:text-[#161616] px-4 py-1.5 text-sm font-semibold shadow-md">
                             {problems.length} Total
                         </span>
                     </div>
 
                     {problems.length > 0 ? (
-                        <div className="overflow-x-auto rounded-2xl border border-gray-200 dark:border-gray-700 bg-white/70 dark:bg-gray-900/40 backdrop-blur-md shadow-xl transition-all duration-300">
+                        <div className="overflow-x-auto rounded-lg   shadow-xl transition-all duration-300">
                             <table className="w-full border-collapse">
                                 <thead>
-                                    <tr className="bg-linear-to-r from-indigo-500 to-cyan-500 text-white text-left">
+                                    <tr className=" text-white text-left">
                                         <th className="p-4 w-12"></th>
                                         <th className="p-4 w-16">#</th>
                                         <th className="p-4">Title</th>
@@ -60,8 +60,8 @@ const Problems = () => {
                                         <tr
                                             key={problem.id || index}
                                             className={`transition-colors duration-200 cursor-pointer ${index % 2 === 0
-                                                    ? "bg-white dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-slate-700"
-                                                    : "bg-gray-50 dark:bg-slate-900 hover:bg-indigo-50 dark:hover:bg-slate-700"
+                                                    ? "bg-white dark:bg-[#111111] hover:bg-indigo-50 dark:hover:bg-[#1a1a1a]"
+                                                    : "bg-gray-50 dark:bg-[#161616] hover:bg-indigo-50 dark:hover:bg-[#1a1a1a]"
                                                 }`}
                                             onClick={() => navigate(`/problem/${problem.id}`)}
                                         >

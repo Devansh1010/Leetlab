@@ -4,7 +4,6 @@ import { axiosInstance } from '../libs/axios'
 const usePlaylistStore = create(set => ({
     playlists: [],
     playlist: {},
-
     isGettingPlaylist: false,
 
 
@@ -26,13 +25,18 @@ const usePlaylistStore = create(set => ({
         try {
             set({ isGettingPlaylist: true })
 
-            const res = await axiosInstance.get(`/get-playlist-by-id/${playlistId}`)
+            const res = await axiosInstance.get(`/playlists/get-playlist-by-id/${playlistId}`)
 
             set({ playlist: res.data.playlist })
+
         } catch (error) {
+
             console.log("Error while getting problem in store", error)
+
         } finally {
+
             set({ isGettingPlaylist: false })
+
         }
     },
 

@@ -4,18 +4,19 @@ import SheetCard from '../../../../admin/src/components/sheet/SheetCard';
 import { Link } from 'react-router-dom';
 
 const Sheets = () => {
-    const { sheets, isGettingSheet, getSheets } = useSheetStore();
+    const { sheets, getSheets } = useSheetStore();
 
     useEffect(() => {
         getSheets();
     }, [getSheets]);
+
     return (
         <div>
-            <section className="relative py-24 bg-linear-to-b from-transparent via-gray-100/50 to-gray-200/30 dark:via-slate-800/50 dark:to-slate-900/30 backdrop-blur-md transition-all">
+            <section className="relative flex flex-col justify-center min-h-screen ">
                 <div className="max-w-6xl mx-auto px-6">
                     <div className="flex items-center justify-between mb-12">
-                        <h2 className="text-3xl font-extrabold dark:text-white bg-linear-to-r from-indigo-500 via-cyan-400 to-purple-500 bg-clip-text text-transparent">
-                            🧭 Your Study Collections
+                        <h2 className="text-3xl font-extrabold">
+                            Your Study Collections
                         </h2>
                     </div>
 

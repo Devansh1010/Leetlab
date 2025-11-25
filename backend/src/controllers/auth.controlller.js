@@ -1,8 +1,8 @@
 import bcrypt from 'bcryptjs'
 import { db } from '../libs/db.js'
 import jwt from 'jsonwebtoken'
-
 import { UserRole } from '../generated/prisma/index.js'
+
 
 export const register = async (req, res) => {
     try {
@@ -166,15 +166,16 @@ export const me = async (req, res) => {
     }
 }
 
-
 function startOfUTCDate(d) {
     const dt = new Date(d);
     return Date.UTC(dt.getUTCFullYear(), dt.getUTCMonth(), dt.getUTCDate());
 }
 
 export const checkDailyStreak = async (req, res) => {
+
     try {
         const userId = req.user?.id;
+
         if (!userId) return res.status(401).json({ error: "Unauthorized" });
 
         const user = await prisma.user.findUnique({ where: { id: userId } });
@@ -201,21 +202,34 @@ export const checkDailyStreak = async (req, res) => {
         const diffDays = Math.floor((todayUTC - lastUTC) / msPerDay);
 
         let newStreak = user.streakCount ?? 0;
+        let longestStreak = user.longestStreak
 
         if (diffDays === 0) {
             // Same calendar day -> no change
             return res.json({ streak: newStreak });
+
         } else if (diffDays === 1) {
+
             newStreak += 1;
+
         } else if (diffDays > 1) {
             newStreak = 1;
         } else {
             // Negative diff -> clocks mismatch, don't change streak but update lastLoginDate
-            await prisma.user.update({
+
+            await db.user.update({
                 where: { id: userId },
                 data: { lastLoginDate: now },
             });
+
             return res.json({ streak: newStreak });
+
+        }
+
+
+        if (newStreak > longestStreak) {
+
+            longestStreak = newStreak
         }
 
         // Persist change
@@ -224,21 +238,60 @@ export const checkDailyStreak = async (req, res) => {
             data: {
                 streakCount: newStreak,
                 lastLoginDate: now,
+                longestStreak
             },
         });
 
+       
+
         return res.json({ streak: newStreak });
+
     } catch (err) {
+
         console.error("Error checking streak:", err);
         return res.status(500).json({ error: "Internal Server Error" });
-    }
-};
 
-export const getUserCount = async (req, res) =>{
+    }
+}
+
+export const getAllUsers = async (req, res) => {
     try {
         const user = req.user
 
-        if(!user && user.role !== UserRole.ADMIN){
+        if (!user) {
+            return res.status(403).json({ status: 403, message: "Access Denied!😒" })
+        }
+
+        const userData = await db.user.findMany({
+            select: {
+                streakCount: true,
+                longestStreak: true,
+                problemsSolved: true,
+                id: true,
+                name: true,
+                email: true
+            }
+        });
+
+        console.log("All User Data: ", userData)
+
+        return res.status(200).json({
+            status: 200,
+            message: "User count fetched Successfully😊",
+            userData: userData || []
+        })
+
+    } catch (error) {
+        console.error("Error getting all user data:", error);
+        return res.status(500).json({ error: "Internal Server Error" });
+    }
+}
+
+export const getUserCount = async (req, res) => {
+    try {
+        const user = req.user
+
+        if (!user && user.role !== UserRole.ADMIN) {
             return res.status(403).json({ status: 403, message: "Access Denied!😒" })
         }
 
@@ -251,6 +304,6 @@ export const getUserCount = async (req, res) =>{
         })
 
     } catch (error) {
-        
+
     }
 }

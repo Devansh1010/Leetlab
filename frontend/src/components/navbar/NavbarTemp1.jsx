@@ -10,7 +10,7 @@ const Navbar = () => {
     const lastLoginDate = authUser?.lastLoginDate || null;
 
     return (
-        <div className="navbar sticky top-0 left-0 w-full z-50 bg-white/60 dark:bg-gray-900/60 backdrop-blur-md border-b border-white/20 shadow-md">
+        <div className="navbar sticky top-0 left-0 w-full z-50 bg-neutral shadow-md">
             <div className="navbar-start">
                 {/* Logo Section */}
                 <div className="dropdown">
@@ -71,6 +71,12 @@ const Navbar = () => {
                                     My Profile
                                 </Link>
                             </li>
+                            <li>
+                                <LogoutButton className="hover:text-white cursor-pointer btn btn-outline rounded-btn">
+                                    <LogOut className="w-4 h-4 mr-2" />
+                                    Logout
+                                </LogoutButton>
+                            </li>
 
 
                         </ul>
@@ -85,10 +91,7 @@ const Navbar = () => {
 
                             <h2>{streakCount}</h2></div>}
 
-                        <LogoutButton className="hover:text-white cursor-pointer btn btn-ghost rounded-btn">
-                            <LogOut className="w-4 h-4 mr-2" />
-                            Logout
-                        </LogoutButton>
+
                     </div>
 
                 </div>

@@ -6,9 +6,24 @@ const useStore = create((set) => ({
     isSigningUp: false,
     isSigningIn: false,
     isCheckingAuth: false,
-    gettingCount : false,
+    gettingCount: false,
     userCount: 0,
+    allUserdata: [],
+    isGettingAllUserData: false,
 
+    getAllUsers: async () => {
+        set({ isGettingAllUserData: true });
+        try {
+            const response = await axiosInstance.get('/auth/getAllUsers');
+            set({ allUserdata: response.data.userData })
+            console.log(response)
+        } catch (error) {
+            set({ allUserdata: null })
+            console.error("Error getting all user data: ", error);
+        } finally {
+            set({ isGettingAllUserData: false });
+        }
+    },
 
     checkAuth: async () => {
         set({ isCheckingAuth: true });

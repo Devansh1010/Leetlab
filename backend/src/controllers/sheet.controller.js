@@ -12,7 +12,6 @@ export const getSheetsCount = async (req, res) => {
         const sheetsCount = await db.sheet.count({
         });
 
-        console.log("Fetched sheetsCount:", sheetsCount);
         res.status(200).json({ message: "success", sheetsCount });
 
     } catch (error) {
@@ -42,7 +41,6 @@ export const getAllSheets = async (req, res) => {
             }
         });
 
-        console.log("Fetched sheets:", sheets);
         res.status(200).json({ message: "success", sheets });
 
     } catch (error) {

@@ -38,13 +38,14 @@ const Playlists = () => {
       {playlists && playlists.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {playlists.map((playlist) => (
-            <PlaylistCard
-              key={playlist.id}
-              title={playlist.title || playlist.name}
-              description={playlist.description}
-              problemCount={playlist.problemCount || 0}
-              difficulty={playlist.difficulty || "Mixed"}
-            />
+            <Link key={playlist.id} to={`/playlist/${playlist.id}`}>
+              <PlaylistCard
+                title={playlist.name}
+                description={playlist.description}
+                problemCount={playlist.problemCount || 0}
+                difficulty={playlist.difficulty || "Mixed"}
+              />
+            </Link>
           ))}
         </div>
       ) : (
