@@ -65,7 +65,7 @@ export const createPlaylist = async (req, res) => {
 
 export const getPlaylistById = async (req, res) => {
     try {
-        
+
         const { playlistId } = req.params;
 
         const userId = req.user.id;
@@ -94,8 +94,6 @@ export const getPlaylistById = async (req, res) => {
             }
 
         });
-
-        console.log("Playlist is ++++++ : ", playlist)
 
         if (!playlist) {
             return res.status(404).json({ message: "Playlist not found" });
@@ -199,7 +197,7 @@ export const addProblemToPlaylist = async (req, res) => {
         }
 
         //can be avoid 
-        
+
         // const problems = await db.problem.findMany({
         //     where: problemIds.map(id => ({ id }))
         // });
@@ -260,10 +258,12 @@ export const removeProblemToPlaylist = async (req, res) => {
         // }
 
         const removedProblemInPlaylist = await db.problemInPlaylist.deleteMany({
-            where: problemIds.map(problemId => ({
-                playlistId: playlistId,
-                problemId: problemId
-            }))
+            where: {
+                OR: problemIds.map(problemId => ({
+                    playlistId: playlistId,
+                    problemId: problemId
+                }))
+            }
         });
 
         res.status(200).json({ message: "Problem removed from playlist successfully", problemInPlaylist: removedProblemInPlaylist });
