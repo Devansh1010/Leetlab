@@ -172,87 +172,83 @@ function startOfUTCDate(d) {
 }
 
 export const checkDailyStreak = async (req, res) => {
-
     try {
+        
         const userId = req.user?.id;
-
+        
         if (!userId) return res.status(401).json({ error: "Unauthorized" });
 
         const user = await prisma.user.findUnique({ where: { id: userId } });
+
         if (!user) return res.status(404).json({ error: "User not found" });
 
         const now = new Date();
-        const todayUTC = startOfUTCDate(now); // midnight UTC for today
+        const todayUTC = startOfUTCDate(now);
 
+        // FIRST LOGIN EVER 
         if (!user.lastLoginDate) {
-            // First-time activity
-            await db.user.update({
+            
+            await prisma.user.update({
                 where: { id: userId },
                 data: {
                     streakCount: 1,
-                    lastLoginDate: now,
+                    longestStreak: 1,
+                    lastLoginDate: new Date(todayUTC) 
                 },
             });
             return res.json({ streak: 1 });
         }
 
         const lastUTC = startOfUTCDate(user.lastLoginDate);
-        const msPerDay = 86_400_000; // 1000*60*60*24
+        const msPerDay = 86400000;
 
         const diffDays = Math.floor((todayUTC - lastUTC) / msPerDay);
 
         let newStreak = user.streakCount ?? 0;
-        let longestStreak = user.longestStreak
+        let longestStreak = user.longestStreak ?? 0;
 
+        
         if (diffDays === 0) {
-            // Same calendar day -> no change
+            
             return res.json({ streak: newStreak });
+        }
 
-        } else if (diffDays === 1) {
-
+        if (diffDays === 1) {
+            // Everyday login then increase streak
             newStreak += 1;
-
         } else if (diffDays > 1) {
+            // Missed 1+ days then reset streak
             newStreak = 1;
         } else {
-            // Negative diff -> clocks mismatch, don't change streak but update lastLoginDate
-
-            await db.user.update({
+            // Negative  then time issue, just update lastLoginDate
+            await prisma.user.update({
                 where: { id: userId },
-                data: { lastLoginDate: now },
+                data: { lastLoginDate: new Date(todayUTC) }
             });
-
             return res.json({ streak: newStreak });
-
         }
 
+        // Update longest streak
+        if (newStreak > longestStreak) longestStreak = newStreak;
 
-        if (newStreak > longestStreak) {
-
-            longestStreak = newStreak
-        }
-
-        // Persist change
-        await db.user.update({
+        // Save
+        await prisma.user.update({
             where: { id: userId },
             data: {
                 streakCount: newStreak,
-                lastLoginDate: now,
-                longestStreak
+                longestStreak,
+                lastLoginDate: new Date(todayUTC)
             },
         });
-
-       
 
         return res.json({ streak: newStreak });
 
     } catch (err) {
-
         console.error("Error checking streak:", err);
         return res.status(500).json({ error: "Internal Server Error" });
-
     }
-}
+};
+
 
 export const getAllUsers = async (req, res) => {
     try {

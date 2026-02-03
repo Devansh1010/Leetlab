@@ -21,7 +21,7 @@ export const getAllPlaylists = async (req, res) => {
             }
         });
 
-        console.log("Fetched playlists:", playlists);
+        
         res.status(200).json({ message: "success", playlists });
 
     } catch (error) {

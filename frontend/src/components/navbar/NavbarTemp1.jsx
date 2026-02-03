@@ -1,4 +1,3 @@
-
 import { Link } from 'react-router-dom'
 import useStore from '../../store/store.js'
 import LogoutButton from '../logoutButton/LogoutButton.jsx'
@@ -7,97 +6,102 @@ import { Code2Icon, LogOut, Swords, User } from 'lucide-react'
 const Navbar = () => {
     const { authUser } = useStore()
     const streakCount = authUser?.streakCount || 0;
-    const lastLoginDate = authUser?.lastLoginDate || null;
 
     return (
-        <div className="navbar sticky top-0 left-0 w-full z-50 bg-neutral shadow-md">
+        <div className="navbar sticky top-0 left-0 w-full z-50 bg-neutral shadow-md px-6">
+
+            {/* LEFT SECTION */}
             <div className="navbar-start">
-                {/* Logo Section */}
-                <div className="dropdown">
-                    <Link to="/" className="flex items-center gap-3 cursor-pointer">
-                        <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" /> </svg>
-                        </div>
-                    </Link>
-                </div>
-                <a className="btn text-xl btn-ghost  hover:btn-#1d4ed8">daisyUI</a>
-            </div>
-            <div className="navbar-center hidden lg:flex">
-                <ul className="menu menu-horizontal px-1">
-                    <li className='text-#0f172a text-lg'><Link to={'/'}>Problems</Link></li>
-                    <li className='text-#0f172a text-lg'><Link to={'/leaderboard'}>Leaderboard</Link></li>
-                    <li className='text-#0f172a text-lg'><Link to={'/playlist'}>Playlists</Link></li>
-                    <li className='text-#0f172a text-lg'> <Link to={'/pricing'}>Pricing</Link></li>
-                </ul>
-
+                <Link to="/" className="text-[25px] font-bold text-white hover:text-primary transition">
+                    Leet<span className='dark:text-primary text-[28px]'>Lab</span> 
+                </Link>
             </div>
 
-            <div className="navbar-end">
-                <div className="flex items-center gap-8">
-                    <div className="dropdown dropdown-end">
-                        <label tabIndex={0} className="btn btn-ghost btn-circle avatar flex flex-row ">
-                            <div className="w-10 rounded-full ">
-                                <img
-                                    src={
-                                        authUser?.image ||
-                                        "https://avatar.iran.liara.run/public/boy"
-                                    }
-                                    alt="User Avatar"
-                                    className="object-cover"
-                                />
-                            </div>
-
-                        </label>
-                        <ul
-                            tabIndex={0}
-                            className="menu menu-sm dropdown-content mt-3 z-1 p-2 shadow bg-base-100 rounded-box w-52 space-y-3"
-                        >
-
-                            {/* Common Options */}
-                            <li>
-                                <p className="text-base font-semibold">
-
-                                    {authUser?.name}
-
-                                </p>
-                                <hr className="border-gray-200/10" />
-                            </li>
-                            <li>
-                                <Link
-                                    to="/profile"
-                                    className="hover:bg-primary hover:text-white text-base font-semibold"
-                                >
-                                    <User className="w-4 h-4 mr-2" />
-                                    My Profile
-                                </Link>
-                            </li>
-                            <li>
-                                <LogoutButton className="hover:text-white cursor-pointer btn btn-outline rounded-btn">
-                                    <LogOut className="w-4 h-4 mr-2" />
-                                    Logout
-                                </LogoutButton>
-                            </li>
-
-
-                        </ul>
-                    </div>
-
-                    <div className='flex gap-2 justify-center items-center'>
-                        <Link to={`/today-challange`} className='hover:text-white cursor-pointer btn btn-ghost rounded-btn'>
-                            <Swords />
+            {/* CENTER MENU — Only Desktop */}
+            <div className="navbar-center">
+                <ul className="menu menu-horizontal px-1 flex gap-6">
+                    <li>
+                        <Link className="text-lg hover:bg-primary/20 px-3 py-2 rounded-lg" to="/">
+                            Problems
                         </Link>
+                    </li>
 
-                        {authUser?.role === "USER" && <div className='flex gap-2'><Code2Icon />
+                    <li>
+                        <Link className="text-lg hover:bg-primary/20 px-3 py-2 rounded-lg" to="/leaderboard">
+                            Leaderboard
+                        </Link>
+                    </li>
 
-                            <h2>{streakCount}</h2></div>}
+                    <li>
+                        <Link className="text-lg hover:bg-primary/20 px-3 py-2 rounded-lg" to="/playlist">
+                            Playlists
+                        </Link>
+                    </li>
 
+                    <li>
+                        <Link className="text-lg hover:bg-primary/20 px-3 py-2 rounded-lg" to="/pricing">
+                            Pricing
+                        </Link>
+                    </li>
+                </ul>
+            </div>
 
+            {/* RIGHT SECTION */}
+            <div className="navbar-end flex items-center gap-6">
+
+                {/* Today Challenge */}
+                <Link
+                    to="/today-challange"
+                    className="btn btn-ghost rounded-btn hover:bg-primary/20"
+                >
+                    <Swords />
+                </Link>
+
+                {/* Streak */}
+                {authUser?.role === "USER" && (
+                    <div className="flex items-center gap-2 text-white">
+                        <Code2Icon />
+                        <h2>{streakCount}</h2>
                     </div>
+                )}
 
+                {/* User Dropdown */}
+                <div className="dropdown dropdown-end">
+                    <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
+                        <div className="w-10 rounded-full">
+                            <img
+                                src={authUser?.image || "https://avatar.iran.liara.run/public/boy"}
+                                alt="User Avatar"
+                                className="object-cover"
+                            />
+                        </div>
+                    </label>
+
+                    <ul
+                        tabIndex={0}
+                        className="menu menu-sm dropdown-content mt-3 z-50 p-3 shadow bg-base-100 rounded-xl w-56 space-y-2"
+                    >
+                        <li className="font-semibold text-base px-2">
+                            {authUser?.name}
+                            <hr className="my-2" />
+                        </li>
+
+                        <li>
+                            <Link to="/profile" className="flex items-center gap-2 hover:bg-primary hover:text-white px-3 py-2 rounded-lg">
+                                <User className="w-4 h-4" /> My Profile
+                            </Link>
+                        </li>
+
+                        <li>
+                            <LogoutButton className="hover:bg-red-500 hover:text-white px-3 py-2 rounded-lg flex items-center gap-2">
+                                <LogOut className="w-4 h-4" /> Logout
+                            </LogoutButton>
+                        </li>
+                    </ul>
                 </div>
             </div>
 
-        </div >
+        </div>
     )
 }
 

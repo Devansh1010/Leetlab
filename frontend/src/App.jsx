@@ -15,6 +15,7 @@ import CreatePlaylist from './components/playlist/CreatePlaylist'
 import ProblemDetailPage from './pages/ProblemDetailPage'
 import TodayChallange from './components/home/TodayChallange'
 import PlaylistDetail from './components/playlist/PlaylistDetail'
+import Profile from './pages/Profile'
 
 
 
@@ -46,6 +47,7 @@ const App = () => {
 
         <Route path="leaderboard" element={authUser ? <Leaderboard /> : <Navigate to="/login" />} />
         <Route path="playlist" element={authUser ? <Playlist /> : <Navigate to="/login" />} />
+        <Route path="profile" element={authUser ? <Profile /> : <Navigate to="/login" />} />
         <Route path="pricing" element={authUser ? <Price /> : <Navigate to="/login" />} />
         <Route path="sheet/:sheetId" element={<SheetDetails />} />
         <Route path="playlist/:playlistId" element={<PlaylistDetail />} />

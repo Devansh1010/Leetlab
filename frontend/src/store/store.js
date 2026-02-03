@@ -89,7 +89,8 @@ const useStore = create((set) => ({
 
     updateStreak: async () => {
         try {
-            await axiosInstance.post(`/auth/check`, { credentials: "include" });
+            console.log('UpdateStreak Called')
+            await axiosInstance.post(`/auth/check`);
         } catch (err) {
             console.error("Failed to update streak:", err);
         }

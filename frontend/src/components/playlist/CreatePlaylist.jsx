@@ -1,13 +1,12 @@
 import React from 'react'
 import { useForm } from "react-hook-form"
 import { axiosInstance } from '../../libs/axios.js'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 
 const CreatePlaylist = () => {
     const {
         register,
         handleSubmit,
-        watch,
         formState: { errors },
     } = useForm()
 
@@ -22,28 +21,58 @@ const CreatePlaylist = () => {
             console.error("Error creating playlist:", error)
         }
     }
+
     return (
-        <div className="min-h-screen flex justify-center items-center ">
+        <div className="min-h-screen flex justify-center items-center bg-white dark:bg-[#161616] px-6 py-16">
+
             <form
                 onSubmit={handleSubmit(onSubmit)}
-                className="bg-white dark:bg-gray-900 shadow-lg rounded-2xl p-8 w-full max-w-md space-y-6 border border-gray-200 dark:border-gray-700"
+                className="
+                    bg-white dark:bg-[#111111]
+                    shadow-xl rounded-2xl
+                    p-8 w-full max-w-md
+                    border border-primary
+                    space-y-6
+                "
             >
-                <h2 className="text-2xl font-bold text-center text-gray-800 dark:text-white">
+
+                {/* Back Button */}
+                <Link
+                    to="/playlist"
+                    className="
+                        inline-block mb-4
+                        text-sm font-semibold
+                        text-primary hover:underline
+                    "
+                >
+                    ← Back to Playlists
+                </Link>
+
+                <h2 className="text-3xl font-extrabold text-center text-[#0f172a] dark:text-gray-100">
                     Create New Playlist
                 </h2>
 
                 {/* Playlist Title */}
-                <div className="form-group">
-                    <label className="block font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                <div>
+                    <label className="block font-semibold text-[#0f172a] dark:text-gray-300 mb-2">
                         Playlist Title
                     </label>
+
                     <input
                         type="text"
                         placeholder="Enter playlist title"
-                        className="input input-bordered w-full max-w-md bg-gray-50 dark:bg-gray-800 dark:text-white rounded-lg px-4 py-2 border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 outline-none"
+                        className="
+                            w-full rounded-xl px-4 py-2
+                            bg-white dark:bg-[#161616]
+                            text-[#0f172a] dark:text-gray-200
+                            border border-primary
+                            focus:outline-none focus:ring-2 focus:ring-primary
+                            transition
+                        "
                         {...register("name", { required: true })}
                     />
-                    {errors.title && (
+
+                    {errors.name && (
                         <p className="text-red-500 text-sm mt-1">
                             This field is required
                         </p>
@@ -51,16 +80,25 @@ const CreatePlaylist = () => {
                 </div>
 
                 {/* Playlist Description */}
-                <div className="form-group">
-                    <label className="block font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                <div>
+                    <label className="block font-semibold text-[#0f172a] dark:text-gray-300 mb-2">
                         Playlist Description
                     </label>
+
                     <input
                         type="text"
                         placeholder="Enter short description"
-                        className="input input-bordered w-full max-w-md bg-gray-50 dark:bg-gray-800 dark:text-white rounded-lg px-4 py-2 border border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 outline-none"
+                        className="
+                            w-full rounded-xl px-4 py-2
+                            bg-white dark:bg-[#161616]
+                            text-[#0f172a] dark:text-gray-200
+                            border border-primary
+                            focus:outline-none focus:ring-2 focus:ring-primary
+                            transition
+                        "
                         {...register("description", { required: true })}
                     />
+
                     {errors.description && (
                         <p className="text-red-500 text-sm mt-1">
                             This field is required
@@ -71,10 +109,17 @@ const CreatePlaylist = () => {
                 {/* Submit Button */}
                 <button
                     type="submit"
-                    className="w-full py-2 rounded-lg font-semibold text-white bg-blue-600 hover:bg-blue-700 transition duration-200 shadow-md"
+                    className="
+                        w-full py-3 rounded-xl font-semibold
+                        border border-primary
+                        bg-primary/20 dark:bg-primary/30 text-primary
+                        hover:bg-primary/30 dark:hover:bg-primary/40
+                        transition-all
+                    "
                 >
                     Create Playlist
                 </button>
+
             </form>
         </div>
     )
